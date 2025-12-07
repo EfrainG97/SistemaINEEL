@@ -1,0 +1,28 @@
+﻿@using Proyecto_Ord.ViewModels
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" />
+}
+
+<div class="dashboard-wrapper">
+    <div>
+        <div class="modules-section">
+            <div class="section-header">
+                <h2 class="section-title">Módulos Disponibles</h2>
+                <p class="section-subtitle">Selecciona una opción para comenzar</p>
+            </div>
+            
+            <div class="dashboard-grid" id="dashboardGrid" data-role="@Model.NombreRol">
+                <!-- Los módulos se cargarán dinámicamente según el rol -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/home.js"></script>
+}

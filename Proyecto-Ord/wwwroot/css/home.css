@@ -1,0 +1,384 @@
+/* Variables CSS para Home Dashboard */
+:root {
+    --primary-color: #2563eb;
+    --primary-dark: #1e40af;
+    --secondary-color: #64748b;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --info-color: #06b6d4;
+    --purple-color: #8b5cf6;
+    --dark-color: #1e293b;
+    --light-bg: #f8fafc;
+    --border-color: #e2e8f0;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Fondo específico para la página Home */
+.main-content:has(.dashboard-wrapper) {
+    background: var(--light-bg);
+    min-height: calc(100vh - 70px);
+}
+
+/* Wrapper del Dashboard */
+.dashboard-wrapper {
+    width: 100%;
+    padding: 0;
+}
+
+/* Contenedor Principal del Dashboard */
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+/* Header del Dashboard */
+.dashboard-header {
+    background: white;
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-content {
+    flex: 1;
+}
+
+.dashboard-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--dark-color);
+}
+
+.dashboard-welcome {
+    font-size: 0.938rem;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+.dashboard-welcome strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-role {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary-color);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.813rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Sección de Módulos */
+.modules-section {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.section-header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--light-bg);
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--dark-color);
+}
+
+.section-subtitle {
+    font-size: 0.875rem;
+    color: var(--secondary-color);
+    margin: 0;
+}
+
+/* Grid de Dashboard */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+/* Tarjetas de Módulos - Diseño Profesional Compacto */
+.module-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.module-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--module-color);
+}
+
+.module-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--module-bg);
+    color: white;
+    font-size: 1.875rem;
+    transition: all 0.2s ease;
+}
+
+.module-title {
+    font-size: 1.063rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--dark-color);
+}
+
+.module-description {
+    color: var(--secondary-color);
+    margin-bottom: 16px;
+    line-height: 1.5;
+    font-size: 0.813rem;
+    flex-grow: 1;
+}
+
+.module-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: var(--module-color);
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.module-btn:hover {
+    color: white;
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+.module-btn i {
+    font-size: 1rem;
+}
+
+/* Colores específicos por módulo */
+.module-card.crear {
+    --module-color: #10b981;
+    --module-bg: #ecfdf5;
+}
+
+.module-card.crear .module-icon {
+    color: #10b981;
+}
+
+.module-card.consultar {
+    --module-color: #06b6d4;
+    --module-bg: #ecfeff;
+}
+
+.module-card.consultar .module-icon {
+    color: #06b6d4;
+}
+
+.module-card.reportes {
+    --module-color: #f59e0b;
+    --module-bg: #fffbeb;
+}
+
+.module-card.reportes .module-icon {
+    color: #f59e0b;
+}
+
+.module-card.configuraciones {
+    --module-color: #8b5cf6;
+    --module-bg: #faf5ff;
+}
+
+.module-card.configuraciones .module-icon {
+    color: #8b5cf6;
+}
+
+.module-card.eliminar {
+    --module-color: #ef4444;
+    --module-bg: #fef2f2;
+}
+
+.module-card.eliminar .module-icon {
+    color: #ef4444;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 20px 16px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 20px;
+    }
+
+    .header-info {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .dashboard-title {
+        font-size: 1.5rem;
+    }
+
+    .modules-section {
+        padding: 24px 20px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+    }
+
+    .module-card {
+        padding: 16px;
+    }
+
+    .module-icon {
+        width: 56px;
+        height: 56px;
+        font-size: 1.5rem;
+        margin-bottom: 12px;
+    }
+
+    .module-title {
+        font-size: 0.938rem;
+    }
+
+    .module-description {
+        font-size: 0.75rem;
+        margin-bottom: 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-container {
+        padding: 16px 12px;
+    }
+
+    .dashboard-header {
+        padding: 16px;
+        margin-bottom: 20px;
+    }
+
+    .dashboard-title {
+        font-size: 1.25rem;
+    }
+
+    .dashboard-welcome {
+        font-size: 0.875rem;
+    }
+
+    .user-role {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+    }
+
+    .modules-section {
+        padding: 20px 16px;
+    }
+
+    .section-title {
+        font-size: 1.125rem;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .module-card {
+        padding: 16px;
+    }
+}
+
+/* Mejoras de accesibilidad */
+.module-card:focus-visible {
+    outline: 2px solid var(--module-color);
+    outline-offset: 2px;
+}
+
+.module-btn:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+/* Animación sutil de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.module-card {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Animación escalonada de tarjetas */
+.module-card:nth-child(1) { animation-delay: 0.05s; }
+.module-card:nth-child(2) { animation-delay: 0.1s; }
+.module-card:nth-child(3) { animation-delay: 0.15s; }
+.module-card:nth-child(4) { animation-delay: 0.2s; }
+.module-card:nth-child(5) { animation-delay: 0.25s; }
+.module-card:nth-child(6) { animation-delay: 0.3s; }
