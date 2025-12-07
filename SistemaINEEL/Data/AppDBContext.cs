@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SistemaINEEL.Models;
+using Microsoft.EntityFrameworkCore;
+using LibreriaModelos;
 
 namespace SistemaINEEL.Data
 {
@@ -9,12 +9,12 @@ namespace SistemaINEEL.Data
         {
         }
 
-        public DbSet<Models.Auditoria> Auditoria { get; set; }
-        public DbSet<Models.Consecutivo> Consecutivos { get; set; }
-        public DbSet<Models.Reporte> Reportes { get; set; }
-        public DbSet<Models.Usuario> Usuarios { get; set; }
-        public DbSet<Models.Rol> Roles { get; set; }
-        public DbSet<Models.Sistema> Sistema { get; set; }
+        public DbSet<Auditoria> Auditoria { get; set; }
+        public DbSet<Consecutivo> Consecutivos { get; set; }
+        public DbSet<Reporte> Reportes { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Rol> Roles { get; set; }
+        public DbSet<Sistema> Sistema { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
