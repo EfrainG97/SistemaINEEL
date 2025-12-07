@@ -18,17 +18,20 @@ namespace SistemaINEEL.Controllers
             _usuarioService = usuarioService;
         }
 
-        public IActionResult Config()
+        public async Task<IActionResult> Config()
         {
+            int sistemaId = 1;
+            var sistema = await _sistemaService.GetSistemaByIdAsync(sistemaId);
+            ViewData["GerenciaActual"] = sistema?.Gerencia ?? "No definida";
+            ViewData["SistemaId"] = sistemaId;
             return View();
         }
 
         [HttpPut]
-        public async Task<IActionResult> EditarGerencia(string nuevaGerencia)
+        public async Task<IActionResult> EditarGerencia(int sistemaId, string nuevaGerencia)
         {
             try
             {
-                int sistemaId = 1;
                 var sistema = await _sistemaService.GetSistemaByIdAsync(sistemaId);
                 if (sistema == null)
                 {
@@ -36,12 +39,12 @@ namespace SistemaINEEL.Controllers
                 }
                 sistema.Gerencia = nuevaGerencia;
                 await _sistemaService.PutSistemaAsync(sistema);
-                return RedirectToAction("Config");
+                // Responder con el nuevo valor para actualizar la UI sin recargar
+                return Json(new { gerenciaActual = sistema.Gerencia });
             }
             catch (Exception ex)
             {
-                TempData["Error"] = "Error al actualizar la gerencia: " + ex.Message;
-                return RedirectToAction("Config");
+                return StatusCode(500, new { error = "Error al actualizar la gerencia: " + ex.Message });
             }
         }
 

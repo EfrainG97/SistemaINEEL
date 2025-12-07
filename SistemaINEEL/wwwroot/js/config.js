@@ -2,7 +2,7 @@ $(document).ready(function () {
     cargarUsuarios();
 });
 
-// Funci�n para cargar usuarios
+// Función para cargar usuarios
 function cargarUsuarios() {
     $.ajax({
         url: '/Sistema/GetUsuarios',
@@ -36,7 +36,7 @@ function cargarUsuarios() {
     });
 }
 
-// Funci�n auxiliar para obtener el nombre del rol
+// Función auxiliar para obtener el nombre del rol
 function obtenerNombreRol(idRol) {
     switch (idRol) {
         case 1: return 'Admin';
@@ -45,7 +45,7 @@ function obtenerNombreRol(idRol) {
     }
 }
 
-// Funci�n para crear usuario
+// Función para crear usuario
 function crearUsuario(num, user, pass, rol) {
     $.ajax({
         url: '/Sistema/CrearUsuarios',
@@ -67,9 +67,9 @@ function crearUsuario(num, user, pass, rol) {
     });
 }
 
-// Funci�n para eliminar usuario
+// Función para eliminar usuario
 function eliminarUsuario(usuarioId) {
-    if (confirm('�Est� seguro de que desea eliminar este usuario?')) {
+    if (confirm('¿Está seguro de que desea eliminar este usuario?')) {
         $.ajax({
             url: '/Sistema/EliminarUsuario',
             type: 'DELETE',
@@ -85,7 +85,7 @@ function eliminarUsuario(usuarioId) {
     }
 }
 
-// Funci�n para editar usuario
+// Función para editar usuario
 function editarUsuario(usuarioId, num, user, pass, rol) {
     $.ajax({
         url: '/Sistema/EditarUsuario',
@@ -108,7 +108,7 @@ function editarUsuario(usuarioId, num, user, pass, rol) {
     });
 }
 
-// Funci�n para editar gerencia
+// Función para editar gerencia
 function editarGerencia(sistemaId, nuevaGerencia) {
     $.ajax({
         url: '/Sistema/EditarGerencia',
@@ -117,9 +117,12 @@ function editarGerencia(sistemaId, nuevaGerencia) {
             sistemaId: sistemaId,
             nuevaGerencia: nuevaGerencia
         },
-        success: function () {
+        success: function (resp) {
             alert('Gerencia actualizada exitosamente');
             $('#formEditarGerencia')[0].reset();
+            if (resp && resp.gerenciaActual) {
+                $('#gerenciaActualLabel').text(resp.gerenciaActual);
+            }
         },
         error: function () {
             alert('Error al actualizar la gerencia.');
@@ -127,7 +130,7 @@ function editarGerencia(sistemaId, nuevaGerencia) {
     });
 }
 
-// Funci�n para abrir modal de edici�n
+// Función para abrir modal de edición
 function abrirModalEditar(usuarioId, numEmpleado, nombreUsuario, password, idRol) {
     $('#editUsuarioId').val(usuarioId);
     $('#editNumEmpleado').val(numEmpleado);
@@ -137,7 +140,7 @@ function abrirModalEditar(usuarioId, numEmpleado, nombreUsuario, password, idRol
     $('#modalEditarUsuario').css('display', 'block');
 }
 
-// Funci�n para cerrar modal
+// Función para cerrar modal
 function cerrarModal() {
     $('#modalEditarUsuario').css('display', 'none');
     $('#formEditarUsuario')[0].reset();
@@ -145,7 +148,7 @@ function cerrarModal() {
 
 // Document ready
 $(document).ready(function () {
-    // Bot�n para cargar usuarios
+    // Botón para cargar usuarios
     $('#btnCargarUsuarios').click(function () {
         cargarUsuarios();
     });
@@ -184,7 +187,7 @@ $(document).ready(function () {
         cerrarModal();
     });
 
-    // Cerrar modal al hacer clic fuera de �l
+    // Cerrar modal al hacer clic fuera de él
     $(window).click(function (event) {
         if (event.target.id === 'modalEditarUsuario') {
             cerrarModal();

@@ -1,5 +1,7 @@
 @{
     ViewData["Title"] = "Configuración del Sistema";
+    var gerenciaActual = ViewData["GerenciaActual"]?.ToString() ?? "No definida";
+    var sistemaId = ViewData["SistemaId"]?.ToString() ?? "1";
 }
 
 <link rel="stylesheet" href="~/css/config.css" />
@@ -13,7 +15,9 @@
     <div class="grid-formularios">
         <div class="seccion-config">
             <h2>Editar Gerencia</h2>
+            <div class="current-value">Gerencia actual: <strong id="gerenciaActualLabel">@gerenciaActual</strong></div>
             <form id="formEditarGerencia">
+                <input type="hidden" id="sistemaId" value="@sistemaId" />
                 <div class="form-group">
                     <label for="nuevaGerencia">Nueva Gerencia:</label>
                     <input type="text" id="nuevaGerencia" name="nuevaGerencia" placeholder="Ingrese el nombre de la gerencia" required />
