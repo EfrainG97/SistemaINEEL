@@ -1,6 +1,5 @@
-// Configuración de módulos por rol
 const modulosPorRol = {
-    superadmin: [
+    admin: [
         {
             id: 'crear',
             icon: 'bi-plus-circle-fill',
@@ -42,40 +41,6 @@ const modulosPorRol = {
             class: 'eliminar'
         }
     ],
-    admin: [
-        {
-            id: 'crear',
-            icon: 'bi-plus-circle-fill',
-            title: 'Crear',
-            description: 'Registrar Consecutivo',
-            url: '/Acciones/Create',
-            class: 'crear'
-        },
-        {
-            id: 'consultar',
-            icon: 'bi-search',
-            title: 'Consultar',
-            description: 'Visualizar listado de Consecutivos',
-            url: '/Acciones/Consultar',
-            class: 'consultar'
-        },
-        {
-            id: 'reportes',
-            icon: 'bi-file-earmark-bar-graph-fill',
-            title: 'Reportes',
-            description: 'Genera reportes',
-            url: '/Acciones/Reportes',
-            class: 'reportes'
-        },
-        {
-            id: 'eliminar',
-            icon: 'bi-trash-fill',
-            title: 'Eliminar',
-            description: 'Elimina consecutivos',
-            url: '/Acciones/Eliminar',
-            class: 'eliminar'
-        }
-    ],
     usuario: [
         {
             id: 'crear',
@@ -104,22 +69,71 @@ const modulosPorRol = {
     ]
 };
 
-// Cargar módulos según el rol del usuario
-document.addEventListener('DOMContentLoaded', function () {
-    const dashboardGrid = document.getElementById('dashboardGrid');
-    const userRole = dashboardGrid.getAttribute('data-role').toLowerCase();
+function cargarModulos() {
+    try {
+        if (window.modulosCargados === true) {
+            return;
+        }
+        
+        const dashboardGrid = document.getElementById('dashboardGrid');
+        
+        if (!dashboardGrid) {
+            return;
+        }
+        
+        if (dashboardGrid.children.length > 0) {
+            window.modulosCargados = true;
+            return;
+        }
 
-    // Obtener los módulos correspondientes al rol
-    const modulos = modulosPorRol[userRole] || modulosPorRol.usuario;
+        let userRole = dashboardGrid.getAttribute('data-role');
+        
+        if (userRole) {
+            userRole = String(userRole).toLowerCase().trim().replace(/\s+/g, '').replace(/[^a-z0-9_]/g, '');
+        } else {
+            userRole = 'usuario';
+        }
 
-    // Generar las tarjetas de módulos
-    modulos.forEach((modulo) => {
-        const card = createModuleCard(modulo);
-        dashboardGrid.appendChild(card);
+        let modulos = modulosPorRol[userRole];
+        
+        if (!modulos) {
+            if (userRole && userRole.includes('admin')) {
+                modulos = modulosPorRol.admin;
+            } else {
+                modulos = modulosPorRol.usuario;
+            }
+        }
+
+        if (modulos && modulos.length > 0) {
+            dashboardGrid.innerHTML = '';
+            modulos.forEach((modulo) => {
+                const card = createModuleCard(modulo);
+                dashboardGrid.appendChild(card);
+            });
+        } else {
+            dashboardGrid.innerHTML = '<p>No hay mÃ³dulos disponibles para tu rol.</p>';
+        }
+    } catch (error) {
+        console.error('Error en cargarModulos:', error);
+    }
+}
+
+(function() {
+    function ejecutarCarga() {
+        cargarModulos();
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', ejecutarCarga);
+    } else {
+        ejecutarCarga();
+    }
+    
+    window.addEventListener('load', function() {
+        setTimeout(ejecutarCarga, 100);
     });
-});
+})();
 
-// Función para crear una tarjeta de módulo
 function createModuleCard(modulo) {
     const card = document.createElement('div');
     card.className = `module-card ${modulo.class}`;
@@ -136,7 +150,6 @@ function createModuleCard(modulo) {
         </a>
     `;
 
-    // Efecto de clic en toda la tarjeta
     card.addEventListener('click', function (e) {
         if (!e.target.closest('.module-btn')) {
             const link = this.querySelector('.module-btn');
@@ -157,8 +170,6 @@ setInterval(function () {
             }
         })
         .catch(error => {
-            console.error('Error verificando sesión:', error);
+            console.error('Error verificando sesiÃ³n:', error);
         });
 }, 300000);
-
-console.log('Dashboard cargado correctamente');

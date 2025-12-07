@@ -1,18 +1,19 @@
-﻿
 using Microsoft.AspNetCore.Mvc;
-using SistemaINEEL.Data;
 using SistemaINEEL.Filters;
+using ServiciosAPI.Interfaces;
 
 namespace SistemaINEEL.Controllers
 {
     [SessionFilter]
     public class AccionesController : Controller
     {
-        private readonly AppDBContext _context;
+        private readonly IConsecutivoService _consecutivoService;
+        private readonly IReporteService _reporteService;
 
-        public AccionesController(AppDBContext context)
+        public AccionesController(IConsecutivoService consecutivoService, IReporteService reporteService)
         {
-            _context = context;
+            _consecutivoService = consecutivoService;
+            _reporteService = reporteService;
         }
 
         public IActionResult Create()

@@ -3,12 +3,10 @@
     'use strict';
 
     if (window.layoutJsInitialized) {
-        console.log('Layout JavaScript ya estaba inicializado - evitando duplicación');
         return;
     }
     window.layoutJsInitialized = true;
 
-    // Navbar scroll effect
     function initNavbarScroll() {
         const navbar = document.querySelector('.navbar-custom');
         
@@ -21,7 +19,6 @@
         }, { passive: true });
     }
 
-    // Scroll to top button
     function initScrollToTop() {
         const scrollBtn = document.getElementById('scrollTopBtn');
         
@@ -36,7 +33,6 @@
             }
         }, { passive: true });
 
-        // Scroll to top on click
         scrollBtn.addEventListener('click', function () {
             window.scrollTo({
                 top: 0,
@@ -61,7 +57,6 @@
         });
     }
 
-    // Auto-close mobile navbar on link click
     function initMobileNavClose() {
         const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
         const navbarCollapse = document.querySelector('.navbar-collapse');
@@ -108,7 +103,6 @@
 
         let hideTimeout;
 
-        // Mostrar dropdown al pasar el mouse
         userDropdown.addEventListener('mouseenter', function () {
             if (window.innerWidth >= 992) {
                 clearTimeout(hideTimeout);
@@ -117,7 +111,6 @@
             }
         });
 
-        // Ocultar dropdown al salir, pero con delay
         userDropdown.addEventListener('mouseleave', function () {
             if (window.innerWidth >= 992) {
                 hideTimeout = setTimeout(() => {
@@ -127,7 +120,6 @@
             }
         });
 
-        // Mantener visible si el mouse está sobre el menu
         dropdownMenu.addEventListener('mouseenter', function () {
             clearTimeout(hideTimeout);
         });
@@ -142,7 +134,6 @@
         });
     }
 
-    // Smooth scroll for anchor links
     function initSmoothScroll() {
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -163,9 +154,7 @@
         });
     }
 
-    // Check session periodically
     function initSessionCheck() {
-        // Only check if user is logged in
         if (document.querySelector('.user-menu')) {
             setInterval(function () {
                 fetch(window.location.href, { method: 'HEAD' })
@@ -175,13 +164,12 @@
                         }
                     })
                     .catch(error => {
-                        console.error('Error verificando sesion:', error);
+                        console.error('Error verificando sesi?n:', error);
                     });
-            }, 300000); // Check every 5 minutes
+            }, 300000);
         }
     }
 
-    // Initialize all functions when DOM is ready
     document.addEventListener('DOMContentLoaded', function () {
         initNavbarScroll();
         initScrollToTop();
@@ -191,11 +179,8 @@
         initDropdownHover();
         initSmoothScroll();
         initSessionCheck();
-
-        console.log('Layout JavaScript cargado correctamente');
     });
 
-    // Handle page visibility change
     document.addEventListener('visibilitychange', function () {
         if (!document.hidden) {
             initActiveNavLink();

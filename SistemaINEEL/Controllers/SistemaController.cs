@@ -1,19 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SistemaINEEL.Data;
+using Microsoft.AspNetCore.Mvc;
 using SistemaINEEL.Filters;
-using SistemaINEEL.Models;
+using ServiciosAPI.Interfaces;
+using LibreriaModelos;
 
 namespace SistemaINEEL.Controllers
 {
     [SessionFilter]
+    [AdminFilter]
     public class SistemaController : Controller
     {
-        private readonly AppDBContext _context;
+        private readonly ISistemaService _sistemaService;
+        private readonly IUsuarioService _usuarioService;
 
-        public SistemaController(AppDBContext context)
+        public SistemaController(ISistemaService sistemaService, IUsuarioService usuarioService)
         {
-            _context = context;
+            _sistemaService = sistemaService;
+            _usuarioService = usuarioService;
         }
 
         public IActionResult Config()
@@ -24,67 +26,104 @@ namespace SistemaINEEL.Controllers
         [HttpPut]
         public async Task<IActionResult> EditarGerencia(string nuevaGerencia)
         {
-            int sistemaId = 1;
-            var sistema = await _context.Sistema.FindAsync(sistemaId);
-            if (sistema == null)
+            try
             {
-                return NotFound();
+                int sistemaId = 1;
+                var sistema = await _sistemaService.GetSistemaByIdAsync(sistemaId);
+                if (sistema == null)
+                {
+                    return NotFound();
+                }
+                sistema.Gerencia = nuevaGerencia;
+                await _sistemaService.PutSistemaAsync(sistema);
+                return RedirectToAction("Config");
             }
-            sistema.Gerencia = nuevaGerencia;
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Config");
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al actualizar la gerencia: " + ex.Message;
+                return RedirectToAction("Config");
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> CrearUsuarios(int Num, string User, string Pass, int Rol)
         {
-            var nuevoUsuario = new Usuario
+            try
             {
-                NumEmpleado = Num,
-                NombreUsuario = User,
-                Password = Pass,
-                IDRol = Rol
-            };
+                var nuevoUsuario = new Usuario
+                {
+                    NumEmpleado = Num,
+                    NombreUsuario = User,
+                    Password = Pass,
+                    IDRol = Rol
+                };
 
-            _context.Usuarios.Add(nuevoUsuario);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Config");
+                await _usuarioService.PostUsuarioAsync(nuevoUsuario);
+                return RedirectToAction("Config");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al crear el usuario: " + ex.Message;
+                return RedirectToAction("Config");
+            }
         }
 
         [HttpDelete]
         public async Task<IActionResult> EliminarUsuario(int usuarioId)
         {
-            var usuario = await _context.Usuarios.FindAsync(usuarioId);
-            if (usuario == null)
+            try
             {
-                return NotFound();
+                var usuario = await _usuarioService.GetUsuarioByIdAsync(usuarioId);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+                await _usuarioService.DeleteUsuarioAsync(usuarioId);
+                return RedirectToAction("Config");
             }
-            _context.Usuarios.Remove(usuario);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Config");
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al eliminar el usuario: " + ex.Message;
+                return RedirectToAction("Config");
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> EditarUsuario(int usuarioId, int Num, string User, string Pass, int Rol)
         {
-            var usuario = await _context.Usuarios.FindAsync(usuarioId);
-            if (usuario == null)
+            try
             {
-                return NotFound();
+                var usuario = await _usuarioService.GetUsuarioByIdAsync(usuarioId);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+                usuario.NumEmpleado = Num;
+                usuario.NombreUsuario = User;
+                usuario.Password = Pass;
+                usuario.IDRol = Rol;
+                await _usuarioService.PutUsuarioAsync(usuario);
+                return RedirectToAction("Config");
             }
-            usuario.NumEmpleado = Num;
-            usuario.NombreUsuario = User;
-            usuario.Password = Pass;
-            usuario.IDRol = Rol;
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Config");
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error al actualizar el usuario: " + ex.Message;
+                return RedirectToAction("Config");
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> GetUsuarios()
         {
-            var usuarios = await _context.Usuarios.ToListAsync();
-            return Json(usuarios);
+            try
+            {
+                var usuarios = await _usuarioService.GetUsuariosAsync();
+                return Json(usuarios);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "Error al obtener los usuarios: " + ex.Message });
+            }
         }
     }
 }
