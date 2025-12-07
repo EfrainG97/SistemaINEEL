@@ -2,15 +2,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using ServiciosAPI.Interfaces;
+using System.Threading.Tasks;
 
 namespace SistemaINEEL.Filters
 {
     public class AdminFilter : ActionFilterAttribute
     {
-        public override async void OnActionExecuting(ActionExecutingContext context)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var session = context.HttpContext.Session;
-            var usuarioLogueado = session.GetString("UsuarioLogeado");
+            var usuarioLogueado = session.GetString("UsuarioLogeado")?.Trim().ToLowerInvariant();
 
             if (usuarioLogueado != "true")
             {
@@ -19,7 +20,7 @@ namespace SistemaINEEL.Filters
             }
 
             var usuarioId = session.GetString("UsuarioID");
-            if (string.IsNullOrEmpty(usuarioId) || !int.TryParse(usuarioId, out int userId))
+            if (string.IsNullOrWhiteSpace(usuarioId) || !int.TryParse(usuarioId, out int userId))
             {
                 context.Result = new RedirectToActionResult("Index", "Home", null);
                 return;
@@ -39,7 +40,7 @@ namespace SistemaINEEL.Filters
                 }
 
                 var rol = await rolService.GetRolByIdAsync(usuario.IDRol);
-                var nombreRol = rol?.NombreRol?.Trim().ToLowerInvariant() ?? "";
+                var nombreRol = rol?.NombreRol?.Trim().ToLowerInvariant() ?? string.Empty;
                 if (rol == null || nombreRol != "admin")
                 {
                     context.Result = new RedirectToActionResult("Index", "Home", null);
@@ -52,7 +53,7 @@ namespace SistemaINEEL.Filters
                 return;
             }
 
-            base.OnActionExecuting(context);
+            await next();
         }
     }
 }
