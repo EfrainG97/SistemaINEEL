@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Proyecto_Ord.Data;
-using Proyecto_Ord.Filters;
-using Proyecto_Ord.Models;
+using SistemaINEEL.Data;
+using SistemaINEEL.Filters;
+using SistemaINEEL.Models;
 
-namespace Proyecto_Ord.Controllers
+namespace SistemaINEEL.Controllers
 {
     [SessionFilter]
     public class SistemaController : Controller

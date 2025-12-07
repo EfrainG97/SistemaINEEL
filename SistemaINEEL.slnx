@@ -1,6 +1,6 @@
 <Solution>
   <Project Path="LibreriaModelos/LibreriaModelos.csproj" />
-  <Project Path="Proyecto-Ord/SistemaINEEL.csproj" />
+  <Project Path="SistemaINEEL/SistemaINEEL.csproj" />
   <Project Path="ServiciosAPI/ServiciosAPI.csproj" />
   <Project Path="SistemaAPI/SistemaAPI.csproj" />
 </Solution>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Proyecto_Ord.Filters
+namespace SistemaINEEL.Filters
 {
     public class SessionFilter : ActionFilterAttribute
     {

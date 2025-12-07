@@ -1,9 +1,9 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using Proyecto_Ord.Data;
-using Proyecto_Ord.Filters;
+using SistemaINEEL.Data;
+using SistemaINEEL.Filters;
 
-namespace Proyecto_Ord.Controllers
+namespace SistemaINEEL.Controllers
 {
     [SessionFilter]
     public class AccionesController : Controller

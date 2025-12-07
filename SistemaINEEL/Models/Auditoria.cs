@@ -1,4 +1,4 @@
-﻿namespace Proyecto_Ord.Models
+﻿namespace SistemaINEEL.Models
 {
     public class Auditoria
     {

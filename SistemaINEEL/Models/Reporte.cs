@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Proyecto_Ord.Models
+namespace SistemaINEEL.Models
 {
     public class Reporte
     {

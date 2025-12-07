@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Proyecto_Ord.Models;
+using SistemaINEEL.Models;
 
-namespace Proyecto_Ord.Data
+namespace SistemaINEEL.Data
 {
     public class AppDBContext : DbContext
     {

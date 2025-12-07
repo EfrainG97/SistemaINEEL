@@ -1,16 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Proyecto_Ord.ViewModels
+namespace SistemaINEEL.ViewModels
 {
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "El número de empleado es requerido")]
-        [Display(Name = "Número de Empleado")]
+        [Required(ErrorMessage = "El nï¿½mero de empleado es requerido")]
+        [Display(Name = "Nï¿½mero de Empleado")]
         public int NumEmpleado { get; set; }
 
-        [Required(ErrorMessage = "La contraseña es requerida")]
+        [Required(ErrorMessage = "La contraseï¿½a es requerida")]
         [DataType(DataType.Password)]
-        [Display(Name = "Contraseña")]
+        [Display(Name = "Contraseï¿½a")]
         public string Password { get; set; } = string.Empty;
         public string? ErrorMessage { get; set; }
         public bool HasError => !string.IsNullOrEmpty(ErrorMessage);

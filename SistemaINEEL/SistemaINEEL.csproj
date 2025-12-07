@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Proyecto_Ord</RootNamespace>
+    <RootNamespace>SistemaINEEL</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

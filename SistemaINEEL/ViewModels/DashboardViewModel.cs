@@ -1,4 +1,4 @@
-namespace Proyecto_Ord.ViewModels
+namespace SistemaINEEL.ViewModels
 {
     public class DashboardViewModel
     {

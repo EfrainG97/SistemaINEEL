@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Proyecto_Ord.Data;
-using Proyecto_Ord.Models;
-using Proyecto_Ord.ViewModels;
+using SistemaINEEL.Data;
+using SistemaINEEL.Models;
+using SistemaINEEL.ViewModels;
 using System.Diagnostics;
 
-namespace Proyecto_Ord.Controllers
+namespace SistemaINEEL.Controllers
 {
     public class LoginController : Controller
     {

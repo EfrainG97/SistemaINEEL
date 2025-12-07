@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Proyecto_Ord.Data;
+using SistemaINEEL.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
