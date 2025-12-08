@@ -2,7 +2,6 @@ $(document).ready(function () {
     cargarUsuarios();
 });
 
-// Función para cargar usuarios
 function cargarUsuarios() {
     $.ajax({
         url: '/Sistema/GetUsuarios',
@@ -36,7 +35,6 @@ function cargarUsuarios() {
     });
 }
 
-// Función auxiliar para obtener el nombre del rol
 function obtenerNombreRol(idRol) {
     switch (idRol) {
         case 1: return 'Admin';
@@ -45,7 +43,6 @@ function obtenerNombreRol(idRol) {
     }
 }
 
-// Función para crear usuario
 function crearUsuario(num, user, pass, rol) {
     $.ajax({
         url: '/Sistema/CrearUsuarios',
@@ -66,8 +63,6 @@ function crearUsuario(num, user, pass, rol) {
         }
     });
 }
-
-// Función para eliminar usuario
 function eliminarUsuario(usuarioId) {
     if (confirm('¿Está seguro de que desea eliminar este usuario?')) {
         $.ajax({
@@ -85,7 +80,6 @@ function eliminarUsuario(usuarioId) {
     }
 }
 
-// Función para editar usuario
 function editarUsuario(usuarioId, num, user, pass, rol) {
     $.ajax({
         url: '/Sistema/EditarUsuario',
@@ -108,7 +102,6 @@ function editarUsuario(usuarioId, num, user, pass, rol) {
     });
 }
 
-// Función para editar gerencia
 function editarGerencia(sistemaId, nuevaGerencia) {
     $.ajax({
         url: '/Sistema/EditarGerencia',
@@ -130,7 +123,6 @@ function editarGerencia(sistemaId, nuevaGerencia) {
     });
 }
 
-// Función para abrir modal de edición
 function abrirModalEditar(usuarioId, numEmpleado, nombreUsuario, password, idRol) {
     $('#editUsuarioId').val(usuarioId);
     $('#editNumEmpleado').val(numEmpleado);
@@ -140,20 +132,13 @@ function abrirModalEditar(usuarioId, numEmpleado, nombreUsuario, password, idRol
     $('#modalEditarUsuario').css('display', 'block');
 }
 
-// Función para cerrar modal
+
 function cerrarModal() {
     $('#modalEditarUsuario').css('display', 'none');
     $('#formEditarUsuario')[0].reset();
 }
 
-// Document ready
-$(document).ready(function () {
-    // Botón para cargar usuarios
-    $('#btnCargarUsuarios').click(function () {
-        cargarUsuarios();
-    });
 
-    // Submit form crear usuario
     $('#formCrearUsuario').submit(function (e) {
         e.preventDefault();
         var num = $('#numEmpleado').val();
@@ -163,7 +148,6 @@ $(document).ready(function () {
         crearUsuario(num, user, pass, rol);
     });
 
-    // Submit form editar usuario
     $('#formEditarUsuario').submit(function (e) {
         e.preventDefault();
         var usuarioId = $('#editUsuarioId').val();
@@ -174,7 +158,6 @@ $(document).ready(function () {
         editarUsuario(usuarioId, num, user, pass, rol);
     });
 
-    // Submit form editar gerencia
     $('#formEditarGerencia').submit(function (e) {
         e.preventDefault();
         var sistemaId = $('#sistemaId').val();
@@ -182,15 +165,13 @@ $(document).ready(function () {
         editarGerencia(sistemaId, nuevaGerencia);
     });
 
-    // Cerrar modal al hacer clic en la X
     $('.close').click(function () {
         cerrarModal();
     });
 
-    // Cerrar modal al hacer clic fuera de él
     $(window).click(function (event) {
         if (event.target.id === 'modalEditarUsuario') {
             cerrarModal();
         }
     });
-});
+;

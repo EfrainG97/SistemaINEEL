@@ -1,0 +1,110 @@
+@model LibreriaModelos.Consecutivo
+
+@{
+    ViewData["Title"] = "Crear Consecutivo";
+    var gerenciaActual = ViewData["GerenciaActual"]?.ToString() ?? "XX";
+}
+
+<h1>Crear Consecutivo</h1>
+
+<h4>Consecutivo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <div class="row mb-3">
+            <div class="col-md-12 text-end">
+                <div class="form-group">
+                    <label class="control-label fw-bold">Folio:</label>
+                    <input type="text" id="folioPreview" class="form-control" value="@gerenciaActual/XX/@DateTime.Now.Year" readonly style="max-width: 300px; display: inline-block;" />
+                </div>
+            </div>
+        </div>
+        
+        <form asp-action="Crear" id="formCrearConsecutivo">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Remitente" class="control-label"></label>
+                        <input asp-for="Remitente" class="form-control" />
+                        <span asp-validation-for="Remitente" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="Destinatario" class="control-label"></label>
+                        <input asp-for="Destinatario" class="form-control" />
+                        <span asp-validation-for="Destinatario" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="Asunto" class="control-label"></label>
+                <input asp-for="Asunto" class="form-control" />
+                <span asp-validation-for="Asunto" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label asp-for="Fecha" class="control-label"></label>
+                <input asp-for="Fecha" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-controller="Home" asp-action="Index">Volver a la lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            $('#formCrearConsecutivo').on('submit', function(e) {
+                e.preventDefault();
+                
+                var formData = {
+                    Remitente: $('#Remitente').val(),
+                    Destinatario: $('#Destinatario').val(),
+                    Asunto: $('#Asunto').val(),
+                    Fecha: $('#Fecha').val()
+                };
+                
+                $.ajax({
+                    url: '@Url.Action("Crear", "Acciones")',
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if (response.success) {
+                            // Actualizar el folio con el ID generado
+                            $('#folioPreview').val(response.folioCompleto);
+                            
+                            // Mostrar alerta de éxito
+                            alert('Consecutivo guardado con éxito.\nFolio: ' + response.folioCompleto);
+                            
+                            // Limpiar el formulario
+                            $('#formCrearConsecutivo')[0].reset();
+                            
+                            // Resetear el folio a XX
+                            var gerencia = '@gerenciaActual';
+                            var año = new Date().getFullYear();
+                            $('#folioPreview').val(gerencia + '/XX/' + año);
+                        } else {
+                            alert('Error: ' + (response.message || 'No se pudo guardar el consecutivo'));
+                        }
+                    },
+                    error: function() {
+                        alert('Error al guardar el consecutivo. Por favor, intente nuevamente.');
+                    }
+                });
+            });
+        });
+    </script>
+}

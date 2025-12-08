@@ -47,5 +47,8 @@ namespace LibreriaModelos
         [StringLength(500, ErrorMessage = "El motivo de cancelación no puede exceder 500 caracteres")]
         [Display(Name = "Motivo de Cancelación")]
         public string? MotivoCan { get; set; }
+
+        [Display(Name = "Activo")]
+        public bool Activo { get; set; } = true;
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,6 +24,13 @@ namespace SistemaAPI.Controllers
         // GET: api/Consecutivos
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Consecutivo>>> GetConsecutivo()
+        {
+            return await _context.Consecutivo.Where(c => c.Activo).ToListAsync();
+        }
+
+        // GET: api/Consecutivos/All (incluye inactivos para cálculo de IDs)
+        [HttpGet("All")]
+        public async Task<ActionResult<IEnumerable<Consecutivo>>> GetAllConsecutivos()
         {
             return await _context.Consecutivo.ToListAsync();
         }
@@ -84,7 +91,7 @@ namespace SistemaAPI.Controllers
             return CreatedAtAction("GetConsecutivo", new { id = consecutivo.ConsecutivoID }, consecutivo);
         }
 
-        // DELETE: api/Consecutivos/5
+        // DELETE: api/Consecutivos/5 (Borrado lógico)
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteConsecutivo(int id)
         {
@@ -94,7 +101,9 @@ namespace SistemaAPI.Controllers
                 return NotFound();
             }
 
-            _context.Consecutivo.Remove(consecutivo);
+            // Borrado lógico: marcar como inactivo en lugar de eliminar físicamente
+            consecutivo.Activo = false;
+            _context.Entry(consecutivo).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return NoContent();

@@ -10,9 +10,10 @@ namespace ServiciosAPI.Interfaces
     public interface IConsecutivoService
     {
         Task<List<Consecutivo>> GetConsecutivosAsync();
+        Task<List<Consecutivo>> GetAllConsecutivosAsync(); // Incluye inactivos para cálculo de IDs
         Task<List<Consecutivo>> PutConsecutivoAsync(Consecutivo consecutivo);
         Task<Consecutivo> GetConsecutivoByIdAsync(int id);
-        Task<List<Consecutivo>> PostConsecutivoAsync(Consecutivo consecutivo);
+        Task<Consecutivo> PostConsecutivoAsync(Consecutivo consecutivo);
         Task<List<Consecutivo>> DeleteConsecutivoAsync(int id);
     }
 }

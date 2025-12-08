@@ -28,11 +28,17 @@ namespace ServiciosAPI.Services
             var response = await _httpClient.DeleteAsync($"{apiUrl}/api/Consecutivo/{id}");
             if (response.IsSuccessStatusCode)
             {
+                // La API devuelve NoContent (204) sin cuerpo, así que solo verificamos el éxito
+                // Si hay contenido, intentamos deserializarlo, si no, retornamos lista vacía
                 var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<List<Consecutivo>>(content, new JsonSerializerOptions
+                if (!string.IsNullOrWhiteSpace(content))
                 {
-                    PropertyNameCaseInsensitive = true
-                }) ?? new List<Consecutivo>();
+                    return JsonSerializer.Deserialize<List<Consecutivo>>(content, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }) ?? new List<Consecutivo>();
+                }
+                return new List<Consecutivo>();
             }
             throw new Exception($"Error al eliminar el consecutivo con ID {id} desde la API.");
         }
@@ -67,7 +73,22 @@ namespace ServiciosAPI.Services
             throw new Exception("Error al obtener los consecutivos desde la API.");
         }
 
-        public async Task<List<Consecutivo>> PostConsecutivoAsync(Consecutivo consecutivo)
+        public async Task<List<Consecutivo>> GetAllConsecutivosAsync()
+        {
+            var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
+            var response = await _httpClient.GetAsync($"{apiUrl}/api/Consecutivo/All");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<Consecutivo>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+            }
+            throw new Exception("Error al obtener todos los consecutivos desde la API.");
+        }
+
+        public async Task<Consecutivo> PostConsecutivoAsync(Consecutivo consecutivo)
         {
             var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
             var json = JsonSerializer.Serialize(consecutivo);
@@ -76,11 +97,11 @@ namespace ServiciosAPI.Services
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var consecutivos = JsonSerializer.Deserialize<List<Consecutivo>>(responseContent, new JsonSerializerOptions
+                var consecutivoCreado = JsonSerializer.Deserialize<Consecutivo>(responseContent, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
-                return consecutivos ?? new List<Consecutivo>();
+                return consecutivoCreado ?? consecutivo;
             }
             throw new Exception("Error al crear el consecutivo en la API.");
         }
