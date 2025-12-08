@@ -114,12 +114,18 @@ namespace ServiciosAPI.Services
             var response = await _httpClient.PutAsync($"{apiUrl}/api/Consecutivo/{consecutivo.ConsecutivoID}", content);
             if (response.IsSuccessStatusCode)
             {
+                // La API devuelve NoContent (204) sin cuerpo, así que solo verificamos el éxito
+                // Si hay contenido, intentamos deserializarlo, si no, retornamos lista vacía
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var consecutivos = JsonSerializer.Deserialize<List<Consecutivo>>(responseContent, new JsonSerializerOptions
+                if (!string.IsNullOrWhiteSpace(responseContent))
                 {
-                    PropertyNameCaseInsensitive = true
-                });
-                return consecutivos ?? new List<Consecutivo>();
+                    var consecutivos = JsonSerializer.Deserialize<List<Consecutivo>>(responseContent, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                    return consecutivos ?? new List<Consecutivo>();
+                }
+                return new List<Consecutivo>();
             }
             throw new Exception($"Error al actualizar el consecutivo con ID {consecutivo.ConsecutivoID} en la API.");
         }

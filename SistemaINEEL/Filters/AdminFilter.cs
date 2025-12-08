@@ -12,15 +12,12 @@ namespace SistemaINEEL.Filters
         {
             var session = context.HttpContext.Session;
 
-            // Validar sesión de usuario
             var usuarioLogueado = session.GetString("UsuarioLogeado")?.Trim().ToLowerInvariant();
             if (usuarioLogueado != "true")
             {
                 context.Result = new RedirectToActionResult("Index", "Login", null);
                 return;
             }
-
-            // Si ya tenemos el rol en sesión, evitar consultas innecesarias
             var rolNombreEnSesion = session.GetString("RolNombre")?.Trim().ToLowerInvariant();
             if (rolNombreEnSesion == "admin")
             {
@@ -28,7 +25,6 @@ namespace SistemaINEEL.Filters
                 return;
             }
 
-            // Validar UsuarioID
             var usuarioIdStr = session.GetString("UsuarioID");
             if (string.IsNullOrWhiteSpace(usuarioIdStr) || !int.TryParse(usuarioIdStr, out int usuarioId))
             {
@@ -42,7 +38,6 @@ namespace SistemaINEEL.Filters
 
             try
             {
-                // Consultar usuario (sin tracking para mejorar rendimiento)
                 var usuario = await usuarioService.GetUsuarioByIdAsync(usuarioId);
                 if (usuario == null)
                 {
@@ -50,11 +45,9 @@ namespace SistemaINEEL.Filters
                     return;
                 }
 
-                // Consultar rol solo si no está en sesión
                 var rol = await rolService.GetRolByIdAsync(usuario.IDRol);
                 var nombreRol = rol?.NombreRol?.Trim().ToLowerInvariant() ?? string.Empty;
 
-                // Guardar el nombre del rol en sesión para futuras validaciones
                 if (!string.IsNullOrEmpty(nombreRol))
                 {
                     session.SetString("RolNombre", nombreRol);
