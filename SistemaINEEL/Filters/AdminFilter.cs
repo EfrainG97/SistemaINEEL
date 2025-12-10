@@ -8,6 +8,12 @@ namespace SistemaINEEL.Filters
 {
     public class AdminFilter : ActionFilterAttribute
     {
+        #region Métodos Override
+        /// <summary>
+        /// Valida que el usuario tenga permisos de administrador antes de permitir el acceso a la acción.
+        /// Verifica primero la sesión, luego consulta la base de datos si es necesario para confirmar el rol.
+        /// Redirige al login o al home según corresponda si no tiene permisos de administrador.
+        /// </summary>
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var session = context.HttpContext.Session;
@@ -67,5 +73,6 @@ namespace SistemaINEEL.Filters
 
             await next();
         }
+        #endregion
     }
 }

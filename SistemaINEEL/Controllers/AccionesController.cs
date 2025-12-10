@@ -13,17 +13,27 @@ namespace SistemaINEEL.Controllers
     [SessionFilter]
     public class AccionesController : Controller
     {
+        #region Campos
         private readonly IConsecutivoService _consecutivoService;
         private readonly ISistemaService _sistemaService;
         private readonly IUsuarioService _usuarioService;
+        #endregion
 
+        #region Constructor
         public AccionesController(IConsecutivoService consecutivoService, ISistemaService sistemaService, IUsuarioService usuarioService)
         {
             _consecutivoService = consecutivoService;
             _sistemaService = sistemaService;
             _usuarioService = usuarioService;
         }
+        #endregion
 
+        #region Métodos GET
+        /// <summary>
+        /// Carga la vista de reportes con los consecutivos y establece las variables de permisos según el rol del usuario.
+        /// Configura ViewData["EsAdmin"] y ViewData["UsuarioIDActual"] para controlar la visibilidad de botones
+        /// en la vista (cancelar, eliminar) según los permisos del usuario.
+        /// </summary>
         public async Task<IActionResult> Reportes()
         {
             try
@@ -45,7 +55,6 @@ namespace SistemaINEEL.Controllers
 
                 ViewData["NombresUsuarios"] = nombresUsuarios;
 
-                // Obtener rol y usuario actual
                 var nombreRol = HttpContext.Session.GetString("NombreRol")?.Trim().ToLowerInvariant() ?? "usuario";
                 ViewData["EsAdmin"] = nombreRol == "admin";
 
@@ -85,6 +94,43 @@ namespace SistemaINEEL.Controllers
             }
         }
 
+        public async Task<IActionResult> Crear()
+        {
+            try
+            {
+                int sistemaId = 1;
+                var sistema = await _sistemaService.GetSistemaByIdAsync(sistemaId);
+                ViewData["GerenciaActual"] = sistema?.Gerencia ?? "XX";
+            }
+            catch
+            {
+                ViewData["GerenciaActual"] = "XX";
+            }
+
+            return View();
+        }
+
+        public async Task<IActionResult> ExportarExcel()
+        {
+            var consecutivos = await _consecutivoService.GetConsecutivosAsync();
+
+            using (var stream = new MemoryStream())
+            {
+                var mapper = new ExcelMapper();
+                mapper.Save(stream, consecutivos, "Consecutivos", true);
+
+                stream.Position = 0;
+                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteConsecutivos.xlsx");
+            }
+        }
+        #endregion
+
+        #region Métodos POST
+        /// <summary>
+        /// Cancela un consecutivo aplicando validaciones de permisos: los usuarios comunes solo pueden cancelar
+        /// sus propios consecutivos, mientras que los administradores pueden cancelar cualquier consecutivo.
+        /// Requiere un motivo de cancelación válido (máximo 500 caracteres).
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Cancelar(int id, string motivo)
         {
@@ -138,6 +184,10 @@ namespace SistemaINEEL.Controllers
             }
         }
 
+        /// <summary>
+        /// Elimina un consecutivo mediante borrado lógico. Solo los administradores pueden ejecutar esta acción.
+        /// Valida el rol del usuario antes de proceder con la eliminación.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Eliminar(int id)
         {
@@ -158,22 +208,11 @@ namespace SistemaINEEL.Controllers
             }
         }
 
-        public async Task<IActionResult> Crear()
-        {
-            try
-            {
-                int sistemaId = 1;
-                var sistema = await _sistemaService.GetSistemaByIdAsync(sistemaId);
-                ViewData["GerenciaActual"] = sistema?.Gerencia ?? "XX";
-            }
-            catch
-            {
-                ViewData["GerenciaActual"] = "XX";
-            }
-
-            return View();
-        }
-
+        /// <summary>
+        /// Crea un nuevo consecutivo generando automáticamente un folio único en formato GERENCIA/ID/AAAA.
+        /// Calcula el siguiente ID disponible analizando todos los consecutivos existentes (incluidos inactivos)
+        /// para evitar duplicados. Asocia el consecutivo al usuario de la sesión actual.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Crear(string Remitente, string Destinatario, string Asunto, string Fecha)
         {
@@ -252,19 +291,6 @@ namespace SistemaINEEL.Controllers
                 return Json(new { success = false, message = "Error al guardar el consecutivo: " + ex.Message });
             }
         }
-
-        public async Task<IActionResult> ExportarExcel()
-        {
-            var consecutivos = await _consecutivoService.GetConsecutivosAsync();
-
-            using (var stream = new MemoryStream())
-            {
-                var mapper = new ExcelMapper();
-                mapper.Save(stream, consecutivos, "Consecutivos", true);
-
-                stream.Position = 0;
-                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteConsecutivos.xlsx");
-            }
-        }
+        #endregion
     }
 }

@@ -13,28 +13,33 @@ namespace ServiciosAPI.Services
 {
     public class ReporteService : IReporteService
     {
+        #region Campos
         private HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        #endregion
 
+        #region Constructor
         public ReporteService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _configuration = configuration;
         }
+        #endregion
 
-        public async Task<List<Reporte>> DeleteReporteAsync(int id)
+        #region Métodos GET
+        public async Task<List<Reporte>> GetReportesAsync()
         {
             var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
-            var response = await _httpClient.DeleteAsync($"{apiUrl}/api/Reporte/{id}");
+            var response = await _httpClient.GetAsync($"{apiUrl}/api/Reporte");
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<List<Reporte>>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
-                }) ?? new List<Reporte>();
+                });
             }
-            throw new Exception($"Error al eliminar el reporte con ID {id} desde la API.");
+            throw new Exception("Error al obtener los reportes desde la API.");
         }
 
         public async Task<Reporte> GetReporteByIdAsync(int id)
@@ -51,22 +56,9 @@ namespace ServiciosAPI.Services
             }
             throw new Exception($"Error al obtener el reporte con ID {id} desde la API.");
         }
+        #endregion
 
-        public async Task<List<Reporte>> GetReportesAsync()
-        {
-            var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
-            var response = await _httpClient.GetAsync($"{apiUrl}/api/Reporte");
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<List<Reporte>>(content, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-            }
-            throw new Exception("Error al obtener los reportes desde la API.");
-        }
-
+        #region Métodos POST
         public async Task<List<Reporte>> PostReporteAsync(Reporte reporte)
         {
             var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
@@ -84,7 +76,9 @@ namespace ServiciosAPI.Services
             }
             throw new Exception("Error al crear el reporte en la API.");
         }
+        #endregion
 
+        #region Métodos PUT
         public async Task<List<Reporte>> PutReporteAsync(Reporte reporte)
         {
             var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
@@ -102,5 +96,23 @@ namespace ServiciosAPI.Services
             }
             throw new Exception($"Error al actualizar el reporte con ID {reporte.ReporteID} en la API.");
         }
+        #endregion
+
+        #region Métodos DELETE
+        public async Task<List<Reporte>> DeleteReporteAsync(int id)
+        {
+            var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
+            var response = await _httpClient.DeleteAsync($"{apiUrl}/api/Reporte/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<Reporte>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }) ?? new List<Reporte>();
+            }
+            throw new Exception($"Error al eliminar el reporte con ID {id} desde la API.");
+        }
+        #endregion
     }
 }

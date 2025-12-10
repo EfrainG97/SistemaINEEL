@@ -14,28 +14,30 @@ namespace SistemaAPI.Controllers
     [ApiController]
     public class ConsecutivoController : ControllerBase
     {
+        #region Campos
         private readonly AppDBContext _context;
+        #endregion
 
+        #region Constructor
         public ConsecutivoController(AppDBContext context)
         {
             _context = context;
         }
+        #endregion
 
-        // GET: api/Consecutivos
+        #region Métodos GET
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Consecutivo>>> GetConsecutivo()
         {
             return await _context.Consecutivo.Where(c => c.Activo).ToListAsync();
         }
 
-        // GET: api/Consecutivos/All (incluye inactivos para cálculo de IDs)
         [HttpGet("All")]
         public async Task<ActionResult<IEnumerable<Consecutivo>>> GetAllConsecutivos()
         {
             return await _context.Consecutivo.ToListAsync();
         }
 
-        // GET: api/Consecutivos/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Consecutivo>> GetConsecutivo(int id)
         {
@@ -48,9 +50,9 @@ namespace SistemaAPI.Controllers
 
             return consecutivo;
         }
+        #endregion
 
-        // PUT: api/Consecutivos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        #region Métodos PUT
         [HttpPut("{id}")]
         public async Task<IActionResult> PutConsecutivo(int id, Consecutivo consecutivo)
         {
@@ -79,9 +81,9 @@ namespace SistemaAPI.Controllers
 
             return NoContent();
         }
+        #endregion
 
-        // POST: api/Consecutivos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        #region Métodos POST
         [HttpPost]
         public async Task<ActionResult<Consecutivo>> PostConsecutivo(Consecutivo consecutivo)
         {
@@ -90,8 +92,13 @@ namespace SistemaAPI.Controllers
 
             return CreatedAtAction("GetConsecutivo", new { id = consecutivo.ConsecutivoID }, consecutivo);
         }
+        #endregion
 
-        // DELETE: api/Consecutivos/5 (Borrado lógico)
+        #region Métodos DELETE
+        /// <summary>
+        /// Realiza un borrado lógico del consecutivo marcándolo como inactivo en lugar de eliminarlo físicamente.
+        /// Esto permite mantener el historial y evitar problemas de integridad referencial.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteConsecutivo(int id)
         {
@@ -101,17 +108,19 @@ namespace SistemaAPI.Controllers
                 return NotFound();
             }
 
-            // Borrado lógico: marcar como inactivo en lugar de eliminar físicamente
             consecutivo.Activo = false;
             _context.Entry(consecutivo).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
+        #endregion
 
+        #region Métodos Privados
         private bool ConsecutivoExists(int id)
         {
             return _context.Consecutivo.Any(e => e.ConsecutivoID == id);
         }
+        #endregion
     }
 }

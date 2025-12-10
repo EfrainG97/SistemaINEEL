@@ -14,21 +14,24 @@ namespace SistemaAPI.Controllers
     [ApiController]
     public class ReporteController : ControllerBase
     {
+        #region Campos
         private readonly AppDBContext _context;
+        #endregion
 
+        #region Constructor
         public ReporteController(AppDBContext context)
         {
             _context = context;
         }
+        #endregion
 
-        // GET: api/Reporte
+        #region Métodos GET
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Reporte>>> GetReporte()
         {
             return await _context.Reporte.ToListAsync();
         }
 
-        // GET: api/Reporte/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Reporte>> GetReporte(int id)
         {
@@ -41,9 +44,9 @@ namespace SistemaAPI.Controllers
 
             return reporte;
         }
+        #endregion
 
-        // PUT: api/Reporte/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        #region Métodos PUT
         [HttpPut("{id}")]
         public async Task<IActionResult> PutReporte(int id, Reporte reporte)
         {
@@ -72,9 +75,9 @@ namespace SistemaAPI.Controllers
 
             return NoContent();
         }
+        #endregion
 
-        // POST: api/Reporte
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        #region Métodos POST
         [HttpPost]
         public async Task<ActionResult<Reporte>> PostReporte(Reporte reporte)
         {
@@ -83,8 +86,9 @@ namespace SistemaAPI.Controllers
 
             return CreatedAtAction("GetReporte", new { id = reporte.ReporteID }, reporte);
         }
+        #endregion
 
-        // DELETE: api/Reporte/5
+        #region Métodos DELETE
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteReporte(int id)
         {
@@ -99,10 +103,13 @@ namespace SistemaAPI.Controllers
 
             return NoContent();
         }
+        #endregion
 
+        #region Métodos Privados
         private bool ReporteExists(int id)
         {
             return _context.Reporte.Any(e => e.ReporteID == id);
         }
+        #endregion
     }
 }

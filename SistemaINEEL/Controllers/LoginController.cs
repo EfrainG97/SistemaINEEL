@@ -8,15 +8,20 @@ namespace SistemaINEEL.Controllers
 {
     public class LoginController : Controller
     {
+        #region Campos
         private readonly IUsuarioService _usuarioService;
         private readonly IRolService _rolService;
+        #endregion
 
+        #region Constructor
         public LoginController(IUsuarioService usuarioService, IRolService rolService)
         {
             _usuarioService = usuarioService;
             _rolService = rolService;
         }
+        #endregion
 
+        #region Métodos GET
         public IActionResult Index()
         {
             if (HttpContext.Session.GetString("UsuarioLogeado") == "true")
@@ -27,7 +32,12 @@ namespace SistemaINEEL.Controllers
             var viewModel = new LoginViewModel();
             return View(viewModel);
         }
+        #endregion
 
+        #region Métodos POST
+        /// <summary>
+        /// Autentica al usuario validando credenciales y establece la sesión con información del usuario y su rol.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel modelo)
         {
@@ -64,7 +74,9 @@ namespace SistemaINEEL.Controllers
                 return View("Index", modelo);
             }
         }
+        #endregion
 
+        #region Métodos de Acción
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
@@ -76,5 +88,6 @@ namespace SistemaINEEL.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        #endregion
     }
 }

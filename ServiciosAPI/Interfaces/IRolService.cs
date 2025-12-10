@@ -9,10 +9,21 @@ namespace ServiciosAPI.Interfaces
 {
     public interface IRolService
     {
+        #region Métodos GET
         Task<List<Rol>> GetRolesAsync();
-        Task<List<Rol>> PutRolAsync(Rol rol);
         Task<Rol> GetRolByIdAsync(int id);
+        #endregion
+
+        #region Métodos POST
         Task<List<Rol>> PostRolAsync(Rol rol);
+        #endregion
+
+        #region Métodos PUT
+        Task<List<Rol>> PutRolAsync(Rol rol);
+        #endregion
+
+        #region Métodos DELETE
         Task<List<Rol>> DeleteRolAsync(int id);
+        #endregion
     }
 }

@@ -1,3 +1,9 @@
+/**
+ * Define los módulos disponibles para cada rol del sistema.
+ * - Admin: Tiene acceso a Crear, Reportes y Configuraciones.
+ * - Usuario: Solo tiene acceso a Crear y Reportes.
+ * Este objeto se utiliza para controlar qué tarjetas de módulos se muestran en el dashboard.
+ */
 const modulosPorRol = {
     admin: [
         {
@@ -45,6 +51,12 @@ const modulosPorRol = {
     ]
 };
 
+/**
+ * Carga dinámicamente los módulos disponibles según el rol del usuario.
+ * Los administradores ven todos los módulos (Crear, Reportes, Configuraciones),
+ * mientras que los usuarios comunes solo ven Crear y Reportes.
+ * El rol se obtiene del atributo data-role del elemento dashboardGrid.
+ */
 function cargarModulos() {
     if (window.modulosCargados === true) {
         return;

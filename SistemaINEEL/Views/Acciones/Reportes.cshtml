@@ -176,6 +176,10 @@
             <tbody>
                 @foreach (var item in Model)
                 {
+                    @* Validación de permisos: Determina qué acciones puede realizar el usuario según su rol.
+                       - Los administradores pueden cancelar cualquier consecutivo activo.
+                       - Los usuarios comunes solo pueden cancelar sus propios consecutivos.
+                       - Solo los administradores pueden eliminar consecutivos (borrado lógico). *@
                     var estaCancelado = item.CanceladoPor > 0;
                     var nombreCreador = nombresUsuarios.ContainsKey(item.UsuarioID) ? nombresUsuarios[item.UsuarioID] : $"Usuario {item.UsuarioID}";
                     var nombreCancelador = estaCancelado && nombresUsuarios.ContainsKey(item.CanceladoPor) ? nombresUsuarios[item.CanceladoPor] : $"Usuario {item.CanceladoPor}";
@@ -212,6 +216,11 @@
                             }
                         </td>
                         <td class="text-center">
+                            @* Control de visibilidad de botones según rol y permisos:
+                               - Botón "Ver motivo": Visible solo si el consecutivo está cancelado (todos los usuarios).
+                               - Botón "Cancelar": Visible solo si el consecutivo está activo Y el usuario es admin o es el creador.
+                               - Botón "Eliminar": Visible solo para administradores (borrado lógico).
+                               - Guion "-": Se muestra cuando el usuario no tiene permisos para ninguna acción. *@
                             <div class="btn-group-acciones">
                                 @if (estaCancelado)
                                 {

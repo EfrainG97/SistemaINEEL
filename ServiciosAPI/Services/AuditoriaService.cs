@@ -13,28 +13,33 @@ namespace ServiciosAPI.Services
 {
     public class AuditoriaService : IAuditoriaService
     {
+        #region Campos
         private HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        #endregion
 
+        #region Constructor
         public AuditoriaService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _configuration = configuration;
         }
+        #endregion
 
-        public async Task<List<Auditoria>> DeleteAuditoriaAsync(int id)
+        #region Métodos GET
+        public async Task<List<Auditoria>> GetAuditoriasAsync()
         {
             var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
-            var response = await _httpClient.DeleteAsync($"{apiUrl}/api/Auditoria/{id}");
+            var response = await _httpClient.GetAsync($"{apiUrl}/api/Auditoria");
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<List<Auditoria>>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
-                }) ?? new List<Auditoria>();
+                });
             }
-            throw new Exception($"Error al eliminar la auditoría con ID {id} desde la API.");
+            throw new Exception("Error al obtener las auditorías desde la API.");
         }
 
         public async Task<Auditoria> GetAuditoriaByIdAsync(int id)
@@ -51,22 +56,9 @@ namespace ServiciosAPI.Services
             }
             throw new Exception($"Error al obtener la auditoría con ID {id} desde la API.");
         }
+        #endregion
 
-        public async Task<List<Auditoria>> GetAuditoriasAsync()
-        {
-            var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
-            var response = await _httpClient.GetAsync($"{apiUrl}/api/Auditoria");
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<List<Auditoria>>(content, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-            }
-            throw new Exception("Error al obtener las auditorías desde la API.");
-        }
-
+        #region Métodos POST
         public async Task<List<Auditoria>> PostAuditoriaAsync(Auditoria auditoria)
         {
             var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
@@ -84,7 +76,9 @@ namespace ServiciosAPI.Services
             }
             throw new Exception("Error al crear la auditoría en la API.");
         }
+        #endregion
 
+        #region Métodos PUT
         public async Task<List<Auditoria>> PutAuditoriaAsync(Auditoria auditoria)
         {
             var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
@@ -102,5 +96,23 @@ namespace ServiciosAPI.Services
             }
             throw new Exception($"Error al actualizar la auditoría con ID {auditoria.AuditoriaID} en la API.");
         }
+        #endregion
+
+        #region Métodos DELETE
+        public async Task<List<Auditoria>> DeleteAuditoriaAsync(int id)
+        {
+            var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
+            var response = await _httpClient.DeleteAsync($"{apiUrl}/api/Auditoria/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<Auditoria>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }) ?? new List<Auditoria>();
+            }
+            throw new Exception($"Error al eliminar la auditoría con ID {id} desde la API.");
+        }
+        #endregion
     }
 }

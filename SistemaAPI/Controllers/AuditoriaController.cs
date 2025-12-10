@@ -14,21 +14,24 @@ namespace SistemaAPI.Controllers
     [ApiController]
     public class AuditoriaController : ControllerBase
     {
+        #region Campos
         private readonly AppDBContext _context;
+        #endregion
 
+        #region Constructor
         public AuditoriaController(AppDBContext context)
         {
             _context = context;
         }
+        #endregion
 
-        // GET: api/Auditorias
+        #region Métodos GET
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Auditoria>>> GetAuditoria()
         {
             return await _context.Auditoria.ToListAsync();
         }
 
-        // GET: api/Auditorias/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Auditoria>> GetAuditoria(int id)
         {
@@ -41,9 +44,9 @@ namespace SistemaAPI.Controllers
 
             return auditoria;
         }
+        #endregion
 
-        // PUT: api/Auditorias/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        #region Métodos PUT
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAuditoria(int id, Auditoria auditoria)
         {
@@ -72,9 +75,9 @@ namespace SistemaAPI.Controllers
 
             return NoContent();
         }
+        #endregion
 
-        // POST: api/Auditorias
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        #region Métodos POST
         [HttpPost]
         public async Task<ActionResult<Auditoria>> PostAuditoria(Auditoria auditoria)
         {
@@ -83,8 +86,9 @@ namespace SistemaAPI.Controllers
 
             return CreatedAtAction("GetAuditoria", new { id = auditoria.AuditoriaID }, auditoria);
         }
+        #endregion
 
-        // DELETE: api/Auditorias/5
+        #region Métodos DELETE
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAuditoria(int id)
         {
@@ -99,10 +103,13 @@ namespace SistemaAPI.Controllers
 
             return NoContent();
         }
+        #endregion
 
+        #region Métodos Privados
         private bool AuditoriaExists(int id)
         {
             return _context.Auditoria.Any(e => e.AuditoriaID == id);
         }
+        #endregion
     }
 }

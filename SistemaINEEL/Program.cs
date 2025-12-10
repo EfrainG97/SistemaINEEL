@@ -1,6 +1,7 @@
 using ServiciosAPI.Interfaces;
 using ServiciosAPI.Services;
 
+#region Configuración de Servicios
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSession(options =>
@@ -10,13 +11,9 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
-
-// Configurar HttpClient para los servicios API
 builder.Services.AddHttpClient();
 
-// Registrar servicios API
 builder.Services.AddScoped<IUsuarioService, UsuarioService>(provider =>
 {
     var httpClientFactory = provider.GetRequiredService<IHttpClientFactory>();
@@ -64,29 +61,27 @@ builder.Services.AddScoped<IAuditoriaService, AuditoriaService>(provider =>
     var configuration = provider.GetRequiredService<IConfiguration>();
     return new AuditoriaService(httpClient, configuration);
 });
+#endregion
 
+#region Configuración de Middleware
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Login}/{action=Index}/{id?}");
+#endregion
 
 app.Run();
 

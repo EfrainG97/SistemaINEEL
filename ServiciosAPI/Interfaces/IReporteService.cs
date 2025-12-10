@@ -9,10 +9,21 @@ namespace ServiciosAPI.Interfaces
 {
     public interface IReporteService
     {
+        #region Métodos GET
         Task<List<Reporte>> GetReportesAsync();
-        Task<List<Reporte>> PutReporteAsync(Reporte reporte);
         Task<Reporte> GetReporteByIdAsync(int id);
+        #endregion
+
+        #region Métodos POST
         Task<List<Reporte>> PostReporteAsync(Reporte reporte);
+        #endregion
+
+        #region Métodos PUT
+        Task<List<Reporte>> PutReporteAsync(Reporte reporte);
+        #endregion
+
+        #region Métodos DELETE
         Task<List<Reporte>> DeleteReporteAsync(int id);
+        #endregion
     }
 }

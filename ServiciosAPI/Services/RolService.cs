@@ -13,28 +13,33 @@ namespace ServiciosAPI.Services
 {
     public class RolService : IRolService
     {
+        #region Campos
         private HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        #endregion
 
+        #region Constructor
         public RolService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _configuration = configuration;
         }
+        #endregion
 
-        public async Task<List<Rol>> DeleteRolAsync(int id)
+        #region Métodos GET
+        public async Task<List<Rol>> GetRolesAsync()
         {
             var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
-            var response = await _httpClient.DeleteAsync($"{apiUrl}/api/Rol/{id}");
+            var response = await _httpClient.GetAsync($"{apiUrl}/api/Rol");
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<List<Rol>>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
-                }) ?? new List<Rol>();
+                });
             }
-            throw new Exception($"Error al eliminar el rol con ID {id} desde la API.");
+            throw new Exception("Error al obtener los roles desde la API.");
         }
 
         public async Task<Rol> GetRolByIdAsync(int id)
@@ -51,22 +56,9 @@ namespace ServiciosAPI.Services
             }
             throw new Exception($"Error al obtener el rol con ID {id} desde la API.");
         }
+        #endregion
 
-        public async Task<List<Rol>> GetRolesAsync()
-        {
-            var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
-            var response = await _httpClient.GetAsync($"{apiUrl}/api/Rol");
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<List<Rol>>(content, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-            }
-            throw new Exception("Error al obtener los roles desde la API.");
-        }
-
+        #region Métodos POST
         public async Task<List<Rol>> PostRolAsync(Rol rol)
         {
             var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
@@ -84,7 +76,9 @@ namespace ServiciosAPI.Services
             }
             throw new Exception("Error al crear el rol en la API.");
         }
+        #endregion
 
+        #region Métodos PUT
         public async Task<List<Rol>> PutRolAsync(Rol rol)
         {
             var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
@@ -102,5 +96,23 @@ namespace ServiciosAPI.Services
             }
             throw new Exception($"Error al actualizar el rol con ID {rol.RolID} en la API.");
         }
+        #endregion
+
+        #region Métodos DELETE
+        public async Task<List<Rol>> DeleteRolAsync(int id)
+        {
+            var apiUrl = _configuration["ApiUrls:ServiciosAPI"];
+            var response = await _httpClient.DeleteAsync($"{apiUrl}/api/Rol/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<List<Rol>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }) ?? new List<Rol>();
+            }
+            throw new Exception($"Error al eliminar el rol con ID {id} desde la API.");
+        }
+        #endregion
     }
 }

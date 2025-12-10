@@ -9,15 +9,20 @@ namespace SistemaINEEL.Controllers
     [AdminFilter]
     public class SistemaController : Controller
     {
+        #region Campos
         private readonly ISistemaService _sistemaService;
         private readonly IUsuarioService _usuarioService;
+        #endregion
 
+        #region Constructor
         public SistemaController(ISistemaService sistemaService, IUsuarioService usuarioService)
         {
             _sistemaService = sistemaService;
             _usuarioService = usuarioService;
         }
+        #endregion
 
+        #region Métodos GET
         public async Task<IActionResult> Config()
         {
             int sistemaId = 1;
@@ -27,27 +32,22 @@ namespace SistemaINEEL.Controllers
             return View();
         }
 
-        [HttpPut]
-        public async Task<IActionResult> EditarGerencia(int sistemaId, string nuevaGerencia)
+        [HttpGet]
+        public async Task<IActionResult> GetUsuarios()
         {
             try
             {
-                var sistema = await _sistemaService.GetSistemaByIdAsync(sistemaId);
-                if (sistema == null)
-                {
-                    return NotFound();
-                }
-                sistema.Gerencia = nuevaGerencia;
-                await _sistemaService.PutSistemaAsync(sistema);
-                // Responder con el nuevo valor para actualizar la UI sin recargar
-                return Json(new { gerenciaActual = sistema.Gerencia });
+                var usuarios = await _usuarioService.GetUsuariosAsync();
+                return Json(usuarios);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { error = "Error al actualizar la gerencia: " + ex.Message });
+                return StatusCode(500, new { error = "Error al obtener los usuarios: " + ex.Message });
             }
         }
+        #endregion
 
+        #region Métodos POST
         [HttpPost]
         public async Task<IActionResult> CrearUsuarios(int Num, string User, string Pass, int Rol)
         {
@@ -70,24 +70,26 @@ namespace SistemaINEEL.Controllers
                 return RedirectToAction("Config");
             }
         }
+        #endregion
 
-        [HttpDelete]
-        public async Task<IActionResult> EliminarUsuario(int usuarioId)
+        #region Métodos PUT
+        [HttpPut]
+        public async Task<IActionResult> EditarGerencia(int sistemaId, string nuevaGerencia)
         {
             try
             {
-                var usuario = await _usuarioService.GetUsuarioByIdAsync(usuarioId);
-                if (usuario == null)
+                var sistema = await _sistemaService.GetSistemaByIdAsync(sistemaId);
+                if (sistema == null)
                 {
                     return NotFound();
                 }
-                await _usuarioService.DeleteUsuarioAsync(usuarioId);
-                return RedirectToAction("Config");
+                sistema.Gerencia = nuevaGerencia;
+                await _sistemaService.PutSistemaAsync(sistema);
+                return Json(new { gerenciaActual = sistema.Gerencia });
             }
             catch (Exception ex)
             {
-                TempData["Error"] = "Error al eliminar el usuario: " + ex.Message;
-                return RedirectToAction("Config");
+                return StatusCode(500, new { error = "Error al actualizar la gerencia: " + ex.Message });
             }
         }
 
@@ -114,19 +116,28 @@ namespace SistemaINEEL.Controllers
                 return RedirectToAction("Config");
             }
         }
+        #endregion
 
-        [HttpGet]
-        public async Task<IActionResult> GetUsuarios()
+        #region Métodos DELETE
+        [HttpDelete]
+        public async Task<IActionResult> EliminarUsuario(int usuarioId)
         {
             try
             {
-                var usuarios = await _usuarioService.GetUsuariosAsync();
-                return Json(usuarios);
+                var usuario = await _usuarioService.GetUsuarioByIdAsync(usuarioId);
+                if (usuario == null)
+                {
+                    return NotFound();
+                }
+                await _usuarioService.DeleteUsuarioAsync(usuarioId);
+                return RedirectToAction("Config");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { error = "Error al obtener los usuarios: " + ex.Message });
+                TempData["Error"] = "Error al eliminar el usuario: " + ex.Message;
+                return RedirectToAction("Config");
             }
         }
+        #endregion
     }
 }

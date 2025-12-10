@@ -9,10 +9,21 @@ namespace ServiciosAPI.Interfaces
 {
     public interface ISistemaService
     {
+        #region Métodos GET
         Task<List<Sistema>> GetSistemasAsync();
-        Task<List<Sistema>> PutSistemaAsync(Sistema sistema);
         Task<Sistema> GetSistemaByIdAsync(int id);
+        #endregion
+
+        #region Métodos POST
         Task<List<Sistema>> PostSistemaAsync(Sistema sistema);
+        #endregion
+
+        #region Métodos PUT
+        Task<List<Sistema>> PutSistemaAsync(Sistema sistema);
+        #endregion
+
+        #region Métodos DELETE
         Task<List<Sistema>> DeleteSistemaAsync(int id);
+        #endregion
     }
 }

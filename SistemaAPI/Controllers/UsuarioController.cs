@@ -14,21 +14,24 @@ namespace SistemaAPI.Controllers
     [ApiController]
     public class UsuarioController : ControllerBase
     {
+        #region Campos
         private readonly AppDBContext _context;
+        #endregion
 
+        #region Constructor
         public UsuarioController(AppDBContext context)
         {
             _context = context;
         }
+        #endregion
 
-        // GET: api/Usuarios
+        #region Métodos GET
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuario()
         {
             return await _context.Usuario.ToListAsync();
         }
 
-        // GET: api/Usuarios/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
@@ -41,9 +44,9 @@ namespace SistemaAPI.Controllers
 
             return usuario;
         }
+        #endregion
 
-        // PUT: api/Usuarios/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        #region Métodos PUT
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
         {
@@ -72,9 +75,9 @@ namespace SistemaAPI.Controllers
 
             return NoContent();
         }
+        #endregion
 
-        // POST: api/Usuarios
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        #region Métodos POST
         [HttpPost]
         public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
         {
@@ -83,8 +86,9 @@ namespace SistemaAPI.Controllers
 
             return CreatedAtAction("GetUsuario", new { id = usuario.UsuarioID }, usuario);
         }
+        #endregion
 
-        // DELETE: api/Usuarios/5
+        #region Métodos DELETE
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
@@ -99,10 +103,13 @@ namespace SistemaAPI.Controllers
 
             return NoContent();
         }
+        #endregion
 
+        #region Métodos Privados
         private bool UsuarioExists(int id)
         {
             return _context.Usuario.Any(e => e.UsuarioID == id);
         }
+        #endregion
     }
 }

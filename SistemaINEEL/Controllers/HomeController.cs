@@ -11,17 +11,27 @@ namespace SistemaINEEL.Controllers
     [SessionFilter]
     public class HomeController : Controller
     {
+        #region Campos
         private readonly ILogger<HomeController> _logger;
         private readonly IUsuarioService _usuarioService;
         private readonly IRolService _rolService;
+        #endregion
 
+        #region Constructor
         public HomeController(ILogger<HomeController> logger, IUsuarioService usuarioService, IRolService rolService)
         {
             _logger = logger;
             _usuarioService = usuarioService;
             _rolService = rolService;
         }
+        #endregion
 
+        #region Métodos GET
+        /// <summary>
+        /// Carga el dashboard principal y obtiene el rol del usuario para determinar qué módulos mostrar.
+        /// El rol se pasa a la vista mediante ViewModel y se usa en JavaScript para filtrar los módulos disponibles.
+        /// Si el usuario es admin, verá el módulo de Configuraciones; si es usuario común, solo verá Crear y Reportes.
+        /// </summary>
         public async Task<IActionResult> Index()
         {
             var viewModel = new DashboardViewModel
@@ -88,6 +98,6 @@ namespace SistemaINEEL.Controllers
 
             return View(viewModel);
         }
-
+        #endregion
     }
 }
