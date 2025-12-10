@@ -139,12 +139,22 @@ $(document).ready(function () {
         var motivo = $('#motivoCancelacion').val().trim();
 
         if (!motivo) {
-            alert('Por favor, ingrese el motivo de cancelacion');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo requerido',
+                text: 'Por favor, ingrese el motivo de cancelación',
+                confirmButtonColor: '#1E5AA8'
+            });
             return;
         }
 
         if (motivo.length > 500) {
-            alert('El motivo de cancelacion no puede exceder 500 caracteres');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Texto muy largo',
+                text: 'El motivo de cancelación no puede exceder 500 caracteres',
+                confirmButtonColor: '#1E5AA8'
+            });
             return;
         }
 
@@ -161,17 +171,33 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
                     modalCancelar.hide();
-                    mostrarExito('Consecutivo cancelado exitosamente');
-                    setTimeout(function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: 'Consecutivo cancelado exitosamente',
+                        confirmButtonColor: '#4A7C59',
+                        timer: 2000,
+                        timerProgressBar: true
+                    }).then(function() {
                         location.reload();
-                    }, 1500);
+                    });
                 } else {
-                    alert('Error: ' + (response.message || 'No se pudo cancelar el consecutivo'));
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message || 'No se pudo cancelar el consecutivo',
+                        confirmButtonColor: '#1E5AA8'
+                    });
                     btn.prop('disabled', false).html('<i class="bi bi-x-octagon me-1"></i>Confirmar Cancelacion');
                 }
             },
             error: function () {
-                alert('Error al cancelar el consecutivo. Por favor, intente nuevamente.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de conexión',
+                    text: 'Error al cancelar el consecutivo. Por favor, intente nuevamente.',
+                    confirmButtonColor: '#1E5AA8'
+                });
                 btn.prop('disabled', false).html('<i class="bi bi-x-octagon me-1"></i>Confirmar Cancelacion');
             }
         });
@@ -206,17 +232,33 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
                     modalEliminar.hide();
-                    mostrarExito('Consecutivo eliminado exitosamente');
-                    setTimeout(function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Eliminado!',
+                        text: 'Consecutivo eliminado exitosamente',
+                        confirmButtonColor: '#4A7C59',
+                        timer: 2000,
+                        timerProgressBar: true
+                    }).then(function() {
                         location.reload();
-                    }, 1500);
+                    });
                 } else {
-                    alert('Error: ' + (response.message || 'No se pudo eliminar el consecutivo'));
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.message || 'No se pudo eliminar el consecutivo',
+                        confirmButtonColor: '#1E5AA8'
+                    });
                     btn.prop('disabled', false).html('<i class="bi bi-trash me-1"></i>Si, eliminar');
                 }
             },
             error: function () {
-                alert('Error al eliminar el consecutivo. Por favor, intente nuevamente.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de conexión',
+                    text: 'Error al eliminar el consecutivo. Por favor, intente nuevamente.',
+                    confirmButtonColor: '#1E5AA8'
+                });
                 btn.prop('disabled', false).html('<i class="bi bi-trash me-1"></i>Si, eliminar');
             }
         });

@@ -3,9 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Sistema Gestion</title>
+    <title>@ViewData["Title"] - INEEL Sistema de Gestión</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -13,8 +14,8 @@
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                <i class="bi bi-grid-3x3-gap-fill"></i>
-                <span class="brand-text">Sistema Gestion</span>
+                <img src="~/images/logo-ineel.png" alt="INEEL" class="navbar-logo" />
+                <span class="brand-text">Sistema de Gestión</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                 <span class="navbar-toggler-icon"></span>
@@ -95,18 +96,25 @@
 
     <footer class="footer-custom">
         <div class="container">
-            <div class="row">
+            <div class="row align-items-center">
                 <div class="col-md-6 footer-section">
-                    <h5><i class="bi bi-grid-3x3-gap-fill"></i> Sistema Gestion</h5>
+                    <div class="footer-logo-container">
+                        <img src="~/images/logo-ineel.png" alt="INEEL" class="footer-logo" />
+                    </div>
                     <p class="footer-description">
-                        Plataforma integral para la gestion y administracion de documentos y procesos empresariales.
+                        Instituto Nacional de Electricidad y Energías Limpias - Sistema integral para la gestión y administración de documentos.
+                    </p>
+                </div>
+                <div class="col-md-6 footer-section text-md-end">
+                    <p class="footer-contact">
+                        <i class="fas fa-map-marker-alt me-2"></i>Reforma 113, Col. Palmira, Cuernavaca, Morelos
                     </p>
                 </div>
             </div>
             <hr class="footer-divider">
             <div class="footer-bottom">
                 <p class="mb-0">
-                    <i class="bi bi-c-circle"></i> 2025 Sistema Gestion
+                    <i class="far fa-copyright"></i> 2025 INEEL - Instituto Nacional de Electricidad y Energías Limpias
                 </p>
             </div>
         </div>
@@ -118,6 +126,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/layout.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

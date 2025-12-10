@@ -1,8 +1,16 @@
-/* Variables CSS para Home Dashboard */
+/* Variables CSS para Home Dashboard - INEEL */
 :root {
-    --primary-color: #2563eb;
-    --primary-dark: #1e40af;
-    --secondary-color: #64748b;
+    /* Colores corporativos INEEL */
+    --ineel-green: #4A7C59;
+    --ineel-green-dark: #3A6347;
+    --ineel-green-light: #5A9469;
+    --ineel-blue: #1E5AA8;
+    --ineel-blue-dark: #164785;
+    --ineel-blue-light: #2B6FC4;
+    
+    --primary-color: #1E5AA8;
+    --primary-dark: #164785;
+    --secondary-color: #4A7C59;
     --success-color: #10b981;
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
@@ -14,6 +22,10 @@
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    
+    /* Gradientes INEEL */
+    --gradient-ineel: linear-gradient(135deg, var(--ineel-green) 0%, var(--ineel-blue) 100%);
+    --gradient-ineel-reverse: linear-gradient(135deg, var(--ineel-blue) 0%, var(--ineel-green) 100%);
 }
 
 /* Fondo específico para la página Home */
@@ -80,7 +92,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: var(--primary-color);
+    background: var(--gradient-ineel);
     color: white;
     padding: 8px 16px;
     border-radius: 8px;

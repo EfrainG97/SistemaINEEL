@@ -10,53 +10,309 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Sistema Gestión</title>
+    <title>@ViewData["Title"] - INEEL Sistema de Gestión</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
-    <link rel="stylesheet" href="~/css/login.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+        :root {
+            --ineel-green: #4A7C59;
+            --ineel-blue: #1E5AA8;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html, body {
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #4A7C59 0%, #1E5AA8 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-wrapper {
+            width: 100%;
+            max-width: 420px;
+        }
+        
+        .login-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        /* Header con logo */
+        .login-header {
+            background: #ffffff;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 3px solid var(--ineel-green);
+        }
+        
+        .logo-img {
+            max-height: 70px;
+            width: auto;
+            margin-bottom: 16px;
+        }
+        
+        .login-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ineel-blue);
+            margin: 0 0 6px 0;
+        }
+        
+        .login-header p {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+        
+        /* Cuerpo del formulario */
+        .login-body {
+            padding: 30px;
+            background: #f8fafc;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            display: block;
+        }
+        
+        .form-label i {
+            color: var(--ineel-green);
+            margin-right: 6px;
+        }
+        
+        .input-group {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #ffffff;
+            transition: border-color 0.2s;
+        }
+        
+        .input-group:focus-within {
+            border-color: var(--ineel-blue);
+        }
+        
+        .input-group-text {
+            background: transparent;
+            border: none;
+            color: var(--ineel-blue);
+            padding: 10px 14px;
+        }
+        
+        .input-group .form-control {
+            border: none;
+            padding: 10px 14px 10px 0;
+            font-size: 0.95rem;
+        }
+        
+        .input-group .form-control:focus {
+            box-shadow: none;
+        }
+        
+        .input-group .btn {
+            border: none;
+            background: transparent;
+            color: #64748b;
+            padding: 10px 14px;
+        }
+        
+        .input-group .btn:hover {
+            color: var(--ineel-blue);
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #4A7C59 0%, #1E5AA8 100%);
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 90, 168, 0.3);
+            color: #ffffff;
+        }
+        
+        .alert-danger {
+            background: #fef2f2;
+            color: #dc2626;
+            border: none;
+            border-left: 4px solid #dc2626;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 0.9rem;
+        }
+        
+        /* Divider */
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e2e8f0;
+        }
+        
+        .divider span {
+            background: #f8fafc;
+            padding: 0 12px;
+            position: relative;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+        
+        /* Credenciales */
+        .credentials-box {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 14px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .credential-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+        
+        .credential-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .badge-role {
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            min-width: 55px;
+            text-align: center;
+        }
+        
+        .badge-role.admin { background: var(--ineel-green); color: #fff; }
+        .badge-role.user { background: var(--ineel-blue); color: #fff; }
+        
+        .credentials-box code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--ineel-blue);
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        .login-footer {
+            text-align: center;
+            padding: 16px;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .login-footer a {
+            color: var(--ineel-blue);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 20px;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.8rem;
+        }
+        
+        /* Responsive */
+        @@media (max-width: 480px) {
+            body { padding: 12px; }
+            .login-header, .login-body { padding: 24px; }
+            .logo-img { max-height: 55px; }
+        }
+    </style>
 </head>
 <body>
-    <div class="floating-shapes">
-        <div class="shape shape1"></div>
-        <div class="shape shape2"></div>
-    </div>
-
-    <div class="login-container">
+    <div class="login-wrapper">
         <div class="login-card">
+            <!-- Header con logo -->
             <div class="login-header">
-                <i class="bi bi-shield-lock-fill"></i>
-                <h2>Bienvenido</h2>
-                <p>Inicia sesión en el Sistema de Gestión</p>
+                <img src="~/images/logo-ineel.png" alt="INEEL" class="logo-img" 
+                     onerror="this.onerror=null; this.src=''; this.style.display='none';" />
+                <h1>Sistema de Gestión</h1>
+                <p>Instituto Nacional de Electricidad y Energías Limpias</p>
             </div>
 
+            <!-- Formulario -->
             <div class="login-body">
                 @if (Model.HasError)
                 {
-                    <div class="alert alert-danger d-flex align-items-center" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
-                        <div>@Model.ErrorMessage</div>
+                    <div class="alert alert-danger mb-3">
+                        <i class="fas fa-exclamation-circle me-2"></i>@Model.ErrorMessage
                     </div>
                 }
 
                 <form asp-controller="Login" asp-action="Login" method="post">
-                    <div class="form-floating">
-                        <input asp-for="NumEmpleado" type="text" class="form-control" id="floatingNumEmpleado" placeholder="Número de Empleado" required/>
-                        <label for="floatingNumEmpleado">
-                            <i class="bi bi-person-badge-fill me-2"></i>Número de Empleado
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fas fa-id-badge"></i>Número de Empleado
                         </label>
-                        <span asp-validation-for="NumEmpleado" class="text-danger"></span>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input asp-for="NumEmpleado" type="text" class="form-control" 
+                                   placeholder="Ingresa tu número" required />
+                        </div>
+                        <span asp-validation-for="NumEmpleado" class="text-danger small"></span>
                     </div>
 
-                    <div class="form-floating">
-                        <input asp-for="Password" type="password" class="form-control" id="floatingPassword" placeholder="Contraseña" required />
-                        <label for="floatingPassword">
-                            <i class="bi bi-lock-fill me-2"></i>Contraseña
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fas fa-lock"></i>Contraseña
                         </label>
-                        <span asp-validation-for="Password" class="text-danger"></span>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            <input asp-for="Password" type="password" class="form-control" 
+                                   id="passwordInput" placeholder="Ingresa tu contraseña" required />
+                            <button class="btn" type="button" onclick="togglePassword()">
+                                <i class="fas fa-eye" id="toggleIcon"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
                     </div>
 
                     <button type="submit" class="btn btn-login">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                        <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
                     </button>
                 </form>
 
@@ -64,33 +320,46 @@
                     <span>Credenciales de prueba</span>
                 </div>
 
-                <div class="credentials-info">
-                    <div class="mb-2">
-                        <i class="bi bi-person-badge-fill me-2"></i>
-                        <strong>Administrador:</strong> empleado: <code>3248</code> / contraseña: <code>pass</code>
+                <div class="credentials-box">
+                    <div class="credential-row">
+                        <span class="badge-role admin">Admin</span>
+                        <span>Empleado: <code>3248</code> / Contraseña: <code>pass</code></span>
                     </div>
-                    <div>
-                        <i class="bi bi-person-fill me-2"></i>
-                        <strong>Usuario:</strong> empleado: <code>1001</code> / contraseña: <code>userpass</code>
+                    <div class="credential-row">
+                        <span class="badge-role user">Usuario</span>
+                        <span>Empleado: <code>1001</code> / Contraseña: <code>userpass</code></span>
                     </div>
                 </div>
-                <div class="info-text">
-                    <i class="bi bi-info-circle-fill me-1"></i>
-                    ¿Problemas para iniciar sesión? Contacta al administrador
-                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <i class="fas fa-question-circle me-1"></i>
+                ¿Problemas para acceder? <a href="#">Contacta al administrador</a>
             </div>
         </div>
 
-        <div class="text-center mt-4 text-white">
-            <small>
-                <i class="bi bi-c-circle me-1"></i>2025 Sistema Gestión - Todos los derechos reservados
-            </small>
+        <div class="copyright">
+            <i class="far fa-copyright"></i> 2025 INEEL - Todos los derechos reservados
         </div>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('passwordInput');
+            const icon = document.getElementById('toggleIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    </script>
 </body>
 </html>

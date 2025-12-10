@@ -5,62 +5,97 @@
     var gerenciaActual = ViewData["GerenciaActual"]?.ToString() ?? "XX";
 }
 
-<h1>Crear Consecutivo</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/crear.css" asp-append-version="true" />
+}
 
-<h4>Consecutivo</h4>
-<hr />
-<div class="row">
-    <div class="col-md-12">
-        <div class="row mb-3">
-            <div class="col-md-12 text-end">
-                <div class="form-group">
-                    <label class="control-label fw-bold">Folio:</label>
-                    <input type="text" id="folioPreview" class="form-control" value="@gerenciaActual/XX/@DateTime.Now.Year" readonly style="max-width: 300px; display: inline-block;" />
+<div class="crear-wrapper">
+    <!-- Header -->
+    <div class="crear-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1><i class="fas fa-file-circle-plus me-2"></i>Crear Consecutivo</h1>
+                <p>Complete los datos para generar un nuevo consecutivo</p>
+            </div>
+            <div>
+                <span class="badge bg-light text-dark fs-6">
+                    <i class="fas fa-calendar me-1"></i> @DateTime.Now.ToString("dd/MM/yyyy")
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card del formulario -->
+    <div class="card crear-card">
+        <div class="card-header crear-card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-edit me-2"></i>Datos del Consecutivo
+                </h5>
+                <div class="folio-preview">
+                    <span class="folio-label">Folio:</span>
+                    <span class="folio-value" id="folioPreview">@gerenciaActual/XXX/@DateTime.Now.Year</span>
                 </div>
             </div>
         </div>
-        
-        <form asp-action="Crear" id="formCrearConsecutivo">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group mb-3">
-                        <label asp-for="Remitente" class="control-label"></label>
-                        <input asp-for="Remitente" class="form-control" />
-                        <span asp-validation-for="Remitente" class="text-danger"></span>
+        <div class="card-body">
+            <form asp-action="Crear" id="formCrearConsecutivo">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-4">
+                            <label asp-for="Remitente" class="form-label">
+                                <i class="fas fa-user-tie me-1"></i> Remitente
+                            </label>
+                            <input asp-for="Remitente" class="form-control" placeholder="Nombre del remitente" />
+                            <span asp-validation-for="Remitente" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-4">
+                            <label asp-for="Destinatario" class="form-label">
+                                <i class="fas fa-user-check me-1"></i> Destinatario
+                            </label>
+                            <input asp-for="Destinatario" class="form-control" placeholder="Nombre del destinatario" />
+                            <span asp-validation-for="Destinatario" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group mb-3">
-                        <label asp-for="Destinatario" class="control-label"></label>
-                        <input asp-for="Destinatario" class="form-control" />
-                        <span asp-validation-for="Destinatario" class="text-danger"></span>
+                
+                <div class="form-group mb-4">
+                    <label asp-for="Asunto" class="form-label">
+                        <i class="fas fa-clipboard-list me-1"></i> Asunto
+                    </label>
+                    <input asp-for="Asunto" class="form-control" placeholder="Descripción del asunto" />
+                    <span asp-validation-for="Asunto" class="text-danger"></span>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-4">
+                            <label asp-for="Fecha" class="form-label">
+                                <i class="fas fa-calendar-day me-1"></i> Fecha
+                            </label>
+                            <input asp-for="Fecha" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+                            <span asp-validation-for="Fecha" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="form-group mb-3">
-                <label asp-for="Asunto" class="control-label"></label>
-                <input asp-for="Asunto" class="form-control" />
-                <span asp-validation-for="Asunto" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group mb-3">
-                <label asp-for="Fecha" class="control-label"></label>
-                <input asp-for="Fecha" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
-                <span asp-validation-for="Fecha" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-primary" />
-            </div>
-        </form>
+                
+                <hr class="my-4">
+                
+                <div class="d-flex justify-content-between">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Volver
+                    </a>
+                    <button type="submit" class="btn btn-crear">
+                        <i class="fas fa-save me-1"></i> Guardar Consecutivo
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div class="mt-3">
-    <a asp-controller="Home" asp-action="Index">Volver a la lista</a>
 </div>
 
 @section Scripts {

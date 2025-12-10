@@ -1,14 +1,30 @@
 :root {
-    --primary-color: #2563eb;
-    --primary-dark: #1e40af;
-    --primary-light: #3b82f6;
-    --secondary-color: #64748b;
+    /* Colores corporativos INEEL */
+    --ineel-green: #4A7C59;
+    --ineel-green-dark: #3A6347;
+    --ineel-green-light: #5A9469;
+    --ineel-blue: #1E5AA8;
+    --ineel-blue-dark: #164785;
+    --ineel-blue-light: #2B6FC4;
+    
+    /* Colores del sistema */
+    --primary-color: #1E5AA8;
+    --primary-dark: #164785;
+    --primary-light: #2B6FC4;
+    --secondary-color: #4A7C59;
+    --secondary-dark: #3A6347;
+    --accent-color: #64748b;
     --dark-color: #1e293b;
     --light-bg: #f8fafc;
     --border-color: #e2e8f0;
-    --navbar-height: 64px;
+    --navbar-height: 70px;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+    
+    /* Gradientes INEEL */
+    --gradient-ineel: linear-gradient(135deg, var(--ineel-green) 0%, var(--ineel-blue) 100%);
+    --gradient-ineel-reverse: linear-gradient(135deg, var(--ineel-blue) 0%, var(--ineel-green) 100%);
 }
 
 * {
@@ -25,11 +41,11 @@ body {
     flex-direction: column;
 }
 
-/* Navbar Profesional */
+/* Navbar Profesional INEEL */
 .navbar-custom {
     background: white;
     box-shadow: var(--shadow-sm);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 3px solid var(--ineel-green);
     padding: 0;
     height: var(--navbar-height);
     transition: box-shadow 0.2s ease;
@@ -42,7 +58,7 @@ body {
 .navbar-brand {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     font-weight: 700;
     font-size: 1.25rem;
     color: var(--primary-color) !important;
@@ -51,17 +67,20 @@ body {
 }
 
 .navbar-brand:hover {
-    opacity: 0.8;
+    opacity: 0.85;
 }
 
-.navbar-brand i {
-    font-size: 1.75rem;
-    color: var(--primary-color);
+.navbar-logo {
+    height: 45px;
+    width: auto;
 }
 
 .brand-text {
-    color: var(--dark-color);
+    color: var(--ineel-blue);
     font-weight: 600;
+    font-size: 1.1rem;
+    border-left: 2px solid var(--ineel-green);
+    padding-left: 12px;
 }
 
 .navbar-toggler {
@@ -130,12 +149,12 @@ body {
 }
 
 .user-avatar {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--primary-color);
+    background: var(--gradient-ineel);
     border-radius: 50%;
     color: white;
     transition: all 0.2s ease;
@@ -250,7 +269,7 @@ body {
     gap: 6px;
     padding: 0.5rem 1.25rem;
     border-radius: 6px;
-    background: var(--primary-color);
+    background: var(--gradient-ineel);
     color: white;
     font-weight: 600;
     font-size: 0.875rem;
@@ -259,8 +278,10 @@ body {
 }
 
 .btn-login-nav:hover {
-    background: var(--primary-dark);
+    background: var(--gradient-ineel-reverse);
     color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30, 90, 168, 0.3);
 }
 
 /* Main Content */
@@ -274,38 +295,43 @@ body {
     padding: 0;
 }
 
-/* Footer Profesional */
+/* Footer Profesional INEEL */
 .footer-custom {
-    background: white;
-    border-top: 1px solid var(--border-color);
-    color: var(--secondary-color);
-    padding: 2.5rem 0 1.5rem;
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+    border-top: 3px solid var(--ineel-green);
+    color: var(--accent-color);
+    padding: 2rem 0 1.5rem;
     margin-top: auto;
 }
 
 .footer-section {
-    margin-bottom: 1.5rem;
-}
-
-.footer-section h5 {
-    font-weight: 600;
-    font-size: 1rem;
     margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--dark-color);
 }
 
-.footer-section h5 i {
-    font-size: 1.25rem;
-    color: var(--primary-color);
+.footer-logo-container {
+    margin-bottom: 1rem;
+}
+
+.footer-logo {
+    height: 50px;
+    width: auto;
 }
 
 .footer-description {
-    color: var(--secondary-color);
-    line-height: 1.6;
+    color: var(--accent-color);
+    line-height: 1.7;
     font-size: 0.875rem;
+    max-width: 500px;
+}
+
+.footer-contact {
+    color: var(--accent-color);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.footer-contact i {
+    color: var(--ineel-green);
 }
 
 .footer-links {
@@ -362,15 +388,19 @@ body {
 
 .footer-bottom {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
 }
 
 .footer-bottom p {
-    color: var(--secondary-color);
+    color: var(--accent-color);
     font-size: 0.813rem;
+}
+
+.footer-bottom i {
+    color: var(--ineel-blue);
 }
 
 /* Scroll to Top Button */
@@ -380,7 +410,7 @@ body {
     right: 24px;
     width: 48px;
     height: 48px;
-    background: var(--primary-color);
+    background: var(--gradient-ineel);
     color: white;
     border: none;
     border-radius: 50%;
@@ -390,7 +420,7 @@ body {
     visibility: hidden;
     transition: all 0.2s ease;
     z-index: 1000;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 12px rgba(30, 90, 168, 0.3);
 }
 
 .scroll-top-btn.show {
@@ -399,9 +429,9 @@ body {
 }
 
 .scroll-top-btn:hover {
-    background: var(--primary-dark);
+    background: var(--gradient-ineel-reverse);
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    box-shadow: 0 6px 16px rgba(74, 124, 89, 0.4);
 }
 
 /* Responsive Design */

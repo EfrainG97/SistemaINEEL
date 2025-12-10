@@ -1,12 +1,21 @@
-/* Estilos para la vista de Reportes */
+/* Estilos para la vista de Reportes - INEEL */
+
+:root {
+    --ineel-green: #4A7C59;
+    --ineel-green-dark: #3A6347;
+    --ineel-blue: #1E5AA8;
+    --ineel-blue-dark: #164785;
+    --gradient-ineel: linear-gradient(135deg, #4A7C59 0%, #1E5AA8 100%);
+    --gradient-ineel-reverse: linear-gradient(135deg, #1E5AA8 0%, #4A7C59 100%);
+}
 
 .reportes-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-ineel);
     color: white;
     padding: 2rem;
     border-radius: 15px;
     margin-bottom: 2rem;
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 30px rgba(30, 90, 168, 0.3);
 }
 
 .reportes-header h1 {
@@ -64,21 +73,21 @@
 
 /* Colores para las tarjetas */
 .resumen-total .icono-resumen {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-ineel);
     color: white;
 }
 
 .resumen-total .numero {
-    color: #667eea;
+    color: var(--ineel-blue);
 }
 
 .resumen-activos .icono-resumen {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    background: linear-gradient(135deg, var(--ineel-green) 0%, #5A9469 100%);
     color: white;
 }
 
 .resumen-activos .numero {
-    color: #11998e;
+    color: var(--ineel-green);
 }
 
 .resumen-cancelados .icono-resumen {
@@ -142,8 +151,8 @@
 
 .filtros-panel .form-control:focus,
 .filtros-panel .form-select:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+    border-color: var(--ineel-blue);
+    box-shadow: 0 0 0 0.2rem rgba(30, 90, 168, 0.15);
 }
 
 /* Tabla de reportes */
@@ -154,7 +163,7 @@
 }
 
 .tabla-reportes thead {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--gradient-ineel);
 }
 
 .tabla-reportes thead th {
@@ -347,14 +356,14 @@
 .valor-folio {
     font-size: 1.25rem !important;
     font-weight: 700;
-    color: #667eea !important;
+    color: var(--ineel-blue) !important;
 }
 
 .motivo-texto {
     background: #f8f9fa;
     padding: 1rem;
     border-radius: 10px;
-    border-left: 4px solid #17a2b8;
+    border-left: 4px solid var(--ineel-blue);
     color: #495057;
     font-style: italic;
 }
@@ -450,7 +459,7 @@
     }
     
     .reportes-header {
-        background: #667eea !important;
+        background: var(--ineel-blue) !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
