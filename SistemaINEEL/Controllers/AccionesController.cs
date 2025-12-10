@@ -1,8 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
-using SistemaINEEL.Filters;
-using ServiciosAPI.Interfaces;
+using Ganss.Excel;
 using LibreriaModelos;
+using Microsoft.AspNetCore.Mvc;
+using ServiciosAPI.Interfaces;
+using SistemaINEEL.Filters;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.IO;
 
 namespace SistemaINEEL.Controllers
 {
@@ -25,7 +29,7 @@ namespace SistemaINEEL.Controllers
             try
             {
                 var consecutivos = await _consecutivoService.GetConsecutivosAsync();
-                
+
                 var nombresUsuarios = new Dictionary<int, string>();
                 try
                 {
@@ -38,13 +42,13 @@ namespace SistemaINEEL.Controllers
                 catch
                 {
                 }
-                
+
                 ViewData["NombresUsuarios"] = nombresUsuarios;
-                
+
                 // Obtener rol y usuario actual
                 var nombreRol = HttpContext.Session.GetString("NombreRol")?.Trim().ToLowerInvariant() ?? "usuario";
                 ViewData["EsAdmin"] = nombreRol == "admin";
-                
+
                 var usuarioIdStr = HttpContext.Session.GetString("UsuarioID");
                 int? usuarioIdActual = null;
                 if (!string.IsNullOrWhiteSpace(usuarioIdStr) && int.TryParse(usuarioIdStr, out int userId))
@@ -52,19 +56,19 @@ namespace SistemaINEEL.Controllers
                     usuarioIdActual = userId;
                 }
                 ViewData["UsuarioIDActual"] = usuarioIdActual;
-                
+
                 var totalConsecutivos = consecutivos.Count();
                 var consecutivosActivos = consecutivos.Count(c => c.CanceladoPor == 0);
                 var consecutivosCancelados = consecutivos.Count(c => c.CanceladoPor > 0);
                 var consecutivosHoy = consecutivos.Count(c => c.Fecha == DateOnly.FromDateTime(DateTime.Now));
                 var consecutivosMes = consecutivos.Count(c => c.Fecha.Month == DateTime.Now.Month && c.Fecha.Year == DateTime.Now.Year);
-                
+
                 ViewData["TotalConsecutivos"] = totalConsecutivos;
                 ViewData["ConsecutivosActivos"] = consecutivosActivos;
                 ViewData["ConsecutivosCancelados"] = consecutivosCancelados;
                 ViewData["ConsecutivosHoy"] = consecutivosHoy;
                 ViewData["ConsecutivosMes"] = consecutivosMes;
-                
+
                 return View(consecutivos);
             }
             catch
@@ -115,7 +119,7 @@ namespace SistemaINEEL.Controllers
 
                 var nombreRol = HttpContext.Session.GetString("NombreRol")?.Trim().ToLowerInvariant() ?? "usuario";
                 bool esAdmin = nombreRol == "admin";
-                
+
                 if (!esAdmin && consecutivo.UsuarioID != usuarioIdActual)
                 {
                     return Json(new { success = false, message = "Solo puede cancelar los consecutivos que usted creo" });
@@ -125,7 +129,7 @@ namespace SistemaINEEL.Controllers
                 consecutivo.MotivoCan = motivo.Trim();
 
                 await _consecutivoService.PutConsecutivoAsync(consecutivo);
-                
+
                 return Json(new { success = true, message = "Consecutivo cancelado exitosamente" });
             }
             catch (Exception ex)
@@ -166,7 +170,7 @@ namespace SistemaINEEL.Controllers
             {
                 ViewData["GerenciaActual"] = "XX";
             }
-            
+
             return View();
         }
 
@@ -175,8 +179,8 @@ namespace SistemaINEEL.Controllers
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(Remitente) || 
-                    string.IsNullOrWhiteSpace(Destinatario) || 
+                if (string.IsNullOrWhiteSpace(Remitente) ||
+                    string.IsNullOrWhiteSpace(Destinatario) ||
                     string.IsNullOrWhiteSpace(Asunto))
                 {
                     return Json(new { success = false, message = "Todos los campos son requeridos" });
@@ -192,10 +196,10 @@ namespace SistemaINEEL.Controllers
                 var anio = DateTime.Now.Year;
 
                 var consecutivos = await _consecutivoService.GetAllConsecutivosAsync();
-                
+
                 int siguienteId = 1;
                 var idsExistentes = new HashSet<int>();
-                
+
                 foreach (var consecutivo in consecutivos)
                 {
                     if (!string.IsNullOrEmpty(consecutivo.FolioCompleto))
@@ -207,22 +211,22 @@ namespace SistemaINEEL.Controllers
                         }
                     }
                 }
-                
+
                 while (idsExistentes.Contains(siguienteId))
                 {
                     siguienteId++;
                 }
-                
+
                 string idFormateado = siguienteId.ToString("D3");
-                
+
                 string folioCompleto = $"{gerencia}/{idFormateado}/{anio}";
-                
+
                 var usuarioIdStr = HttpContext.Session.GetString("UsuarioID");
                 if (string.IsNullOrWhiteSpace(usuarioIdStr) || !int.TryParse(usuarioIdStr, out int usuarioId))
                 {
                     return Json(new { success = false, message = "No se pudo obtener el ID del usuario de la sesion" });
                 }
-                
+
                 var nuevoConsecutivo = new Consecutivo
                 {
                     FolioCompleto = folioCompleto,
@@ -232,11 +236,12 @@ namespace SistemaINEEL.Controllers
                     Fecha = fechaConvertida,
                     UsuarioID = usuarioId
                 };
-                
+
                 await _consecutivoService.PostConsecutivoAsync(nuevoConsecutivo);
-                
-                return Json(new { 
-                    success = true, 
+
+                return Json(new
+                {
+                    success = true,
                     folioCompleto = folioCompleto,
                     idGenerado = idFormateado
                 });
@@ -245,6 +250,20 @@ namespace SistemaINEEL.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = "Error al guardar el consecutivo: " + ex.Message });
+            }
+        }
+
+        public async Task<IActionResult> ExportarExcel()
+        {
+            var consecutivos = await _consecutivoService.GetConsecutivosAsync();
+
+            using (var stream = new MemoryStream())
+            {
+                var mapper = new ExcelMapper();
+                mapper.Save(stream, consecutivos, "Consecutivos", true);
+
+                stream.Position = 0;
+                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteConsecutivos.xlsx");
             }
         }
     }

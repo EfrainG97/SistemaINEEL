@@ -97,9 +97,10 @@ $(document).ready(function () {
         $('#tablaReportes').removeClass('d-none');
     });
     
-    // Exportar (placeholder)
-    $('#btnExportar').on('click', function () {
-        alert('Funcionalidad de exportacion en desarrollo');
+    // Exportar a Excel
+    $('#btnExportar').on('click', function (e) {
+        // El enlace ya tiene el href correcto, simplemente permitir la navegacion
+        // No se necesita prevenir el comportamiento por defecto
     });
     
     // ========== VER MOTIVO DE CANCELACION =========="

@@ -140,9 +140,9 @@
                 <button type="button" class="btn btn-outline-secondary btn-sm" id="btnLimpiarFiltros">
                     <i class="bi bi-x-circle me-1"></i> Limpiar filtros
                 </button>
-                <button type="button" class="btn btn-outline-success btn-sm ms-2" id="btnExportar">
+                <a href="@Url.Action("ExportarExcel", "Acciones")" class="btn btn-outline-success btn-sm ms-2" id="btnExportar">
                     <i class="bi bi-file-excel me-1"></i> Exportar
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -312,7 +312,7 @@ else
     </div>
 </div>
 
-<!-- Modal Cancelar Consecutivo -->
+
 <div class="modal fade" id="modalCancelar" tabindex="-1" aria-labelledby="modalCancelarLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-cancelar">
@@ -352,7 +352,7 @@ else
     </div>
 </div>
 
-<!-- Modal Eliminar Consecutivo -->
+
 <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-eliminar">
