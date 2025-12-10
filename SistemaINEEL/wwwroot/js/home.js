@@ -102,7 +102,7 @@ function cargarModulos() {
             dashboardGrid.appendChild(card);
         });
     } else {
-        dashboardGrid.innerHTML = '<p>No hay módulos disponibles para tu rol.</p>';
+        dashboardGrid.innerHTML = '<p>No hay modulos disponibles para tu rol.</p>';
     }
     
     window.modulosCargados = true;

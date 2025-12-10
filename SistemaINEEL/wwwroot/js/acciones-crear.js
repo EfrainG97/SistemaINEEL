@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    var hoy = new Date().toISOString().split('T')[0];
+    $('#Fecha').val(hoy);
+
     $('#formCrearConsecutivo').on('submit', function (e) {
         e.preventDefault();
 
@@ -15,19 +18,9 @@ $(document).ready(function () {
             data: formData,
             success: function (response) {
                 if (response.success) {
-                    // Actualizar el folio con el ID generado
-                    $('#folioPreview').val(response.folioCompleto);
+                    alert('Consecutivo guardado con exito.\nFolio: ' + response.folioCompleto);
 
-                    // Mostrar alerta de éxito
-                    alert('Consecutivo guardado con éxito.\nFolio: ' + response.folioCompleto);
-
-                    // Limpiar el formulario
-                    $('#formCrearConsecutivo')[0].reset();
-
-                    // Resetear el folio a XX
-                    var gerencia = window.gerenciaActual;
-                    var año = new Date().getFullYear();
-                    $('#folioPreview').val(gerencia + '/XX/' + año);
+                    window.location.href = '/Home/Index';
                 } else {
                     alert('Error: ' + (response.message || 'No se pudo guardar el consecutivo'));
                 }

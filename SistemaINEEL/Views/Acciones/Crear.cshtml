@@ -48,7 +48,7 @@
             
             <div class="form-group mb-3">
                 <label asp-for="Fecha" class="control-label"></label>
-                <input asp-for="Fecha" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                <input asp-for="Fecha" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
                 <span asp-validation-for="Fecha" class="text-danger"></span>
             </div>
             

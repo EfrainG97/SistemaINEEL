@@ -28,11 +28,9 @@ namespace SistemaINEEL.Controllers
             {
                 var consecutivos = await _consecutivoService.GetConsecutivosAsync();
                 
-                // Obtener el rol del usuario de la sesión
                 var nombreRol = HttpContext.Session.GetString("NombreRol")?.Trim().ToLowerInvariant() ?? "usuario";
                 ViewData["EsAdmin"] = nombreRol == "admin";
                 
-                // Obtener el UsuarioID de la sesión
                 var usuarioIdStr = HttpContext.Session.GetString("UsuarioID");
                 int? usuarioIdActual = null;
                 if (!string.IsNullOrWhiteSpace(usuarioIdStr) && int.TryParse(usuarioIdStr, out int userId))
@@ -41,7 +39,6 @@ namespace SistemaINEEL.Controllers
                 }
                 ViewData["UsuarioIDActual"] = usuarioIdActual;
                 
-                // Crear un diccionario para mapear UsuarioID a NombreUsuario
                 var nombresUsuarios = new Dictionary<int, string>();
                 try
                 {
@@ -53,14 +50,13 @@ namespace SistemaINEEL.Controllers
                 }
                 catch
                 {
-                    // Si hay error al obtener usuarios, usar IDs como fallback
                 }
                 
                 ViewData["NombresUsuarios"] = nombresUsuarios;
                 
                 return View(consecutivos);
             }
-            catch (Exception ex)
+            catch
             {
                 ViewData["EsAdmin"] = false;
                 ViewData["UsuarioIDActual"] = null;
@@ -96,47 +92,41 @@ namespace SistemaINEEL.Controllers
             {
                 if (string.IsNullOrWhiteSpace(motivo))
                 {
-                    return Json(new { success = false, message = "El motivo de cancelación es requerido" });
+                    return Json(new { success = false, message = "El motivo de cancelacion es requerido" });
                 }
 
                 if (motivo.Length > 500)
                 {
-                    return Json(new { success = false, message = "El motivo de cancelación no puede exceder 500 caracteres" });
+                    return Json(new { success = false, message = "El motivo de cancelacion no puede exceder 500 caracteres" });
                 }
 
-                // Obtener el consecutivo
                 var consecutivo = await _consecutivoService.GetConsecutivoByIdAsync(id);
                 if (consecutivo == null)
                 {
                     return Json(new { success = false, message = "Consecutivo no encontrado" });
                 }
 
-                // Verificar si ya está cancelado
                 if (consecutivo.CanceladoPor > 0)
                 {
-                    return Json(new { success = false, message = "Este consecutivo ya está cancelado" });
+                    return Json(new { success = false, message = "Este consecutivo ya esta cancelado" });
                 }
 
-                // Obtener el UsuarioID de la sesión
                 var usuarioIdStr = HttpContext.Session.GetString("UsuarioID");
                 if (string.IsNullOrWhiteSpace(usuarioIdStr) || !int.TryParse(usuarioIdStr, out int usuarioIdActual))
                 {
-                    return Json(new { success = false, message = "No se pudo obtener el ID del usuario de la sesión" });
+                    return Json(new { success = false, message = "No se pudo obtener el ID del usuario de la sesion" });
                 }
 
-                // Verificar permisos: solo el creador o admin puede cancelar
                 var nombreRol = HttpContext.Session.GetString("NombreRol")?.Trim().ToLowerInvariant() ?? "usuario";
                 bool esAdmin = nombreRol == "admin";
                 
                 if (!esAdmin && consecutivo.UsuarioID != usuarioIdActual)
                 {
-                    return Json(new { success = false, message = "Solo puede cancelar los consecutivos que usted creó" });
+                    return Json(new { success = false, message = "Solo puede cancelar los consecutivos que usted creo" });
                 }
 
-                // Actualizar el consecutivo con la información de cancelación
                 consecutivo.CanceladoPor = usuarioIdActual;
                 consecutivo.MotivoCan = motivo.Trim();
-                // El consecutivo sigue activo (Activo = true) para que se muestre en la consulta
 
                 await _consecutivoService.PutConsecutivoAsync(consecutivo);
                 
@@ -156,7 +146,7 @@ namespace SistemaINEEL.Controllers
                 var sistema = await _sistemaService.GetSistemaByIdAsync(sistemaId);
                 ViewData["GerenciaActual"] = sistema?.Gerencia ?? "XX";
             }
-            catch (Exception ex)
+            catch
             {
                 ViewData["GerenciaActual"] = "XX";
             }
@@ -178,12 +168,12 @@ namespace SistemaINEEL.Controllers
 
                 if (string.IsNullOrWhiteSpace(Fecha) || !DateOnly.TryParse(Fecha, out DateOnly fechaConvertida))
                 {
-                    return Json(new { success = false, message = "La fecha es requerida y debe tener un formato válido" });
+                    return Json(new { success = false, message = "La fecha es requerida y debe tener un formato valido" });
                 }
                 int sistemaId = 1;
                 var sistema = await _sistemaService.GetSistemaByIdAsync(sistemaId);
                 var gerencia = sistema?.Gerencia ?? "XX";
-                var año = DateTime.Now.Year;
+                var anio = DateTime.Now.Year;
 
                 var consecutivos = await _consecutivoService.GetAllConsecutivosAsync();
                 
@@ -209,12 +199,12 @@ namespace SistemaINEEL.Controllers
                 
                 string idFormateado = siguienteId.ToString("D3");
                 
-                string folioCompleto = $"{gerencia}/{idFormateado}/{año}";
+                string folioCompleto = $"{gerencia}/{idFormateado}/{anio}";
                 
                 var usuarioIdStr = HttpContext.Session.GetString("UsuarioID");
                 if (string.IsNullOrWhiteSpace(usuarioIdStr) || !int.TryParse(usuarioIdStr, out int usuarioId))
                 {
-                    return Json(new { success = false, message = "No se pudo obtener el ID del usuario de la sesión" });
+                    return Json(new { success = false, message = "No se pudo obtener el ID del usuario de la sesion" });
                 }
                 
                 var nuevoConsecutivo = new Consecutivo
@@ -234,6 +224,7 @@ namespace SistemaINEEL.Controllers
                     folioCompleto = folioCompleto,
                     idGenerado = idFormateado
                 });
+
             }
             catch (Exception ex)
             {

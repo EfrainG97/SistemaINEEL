@@ -15,10 +15,50 @@
     </a>
 </div>
 
+<div class="card mb-4">
+    <div class="card-header bg-light">
+        <h5 class="mb-0"><i class="bi bi-search"></i> Buscar Consecutivos</h5>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label for="filtroFolio" class="form-label">Folio</label>
+                <input type="text" class="form-control" id="filtroFolio" placeholder="Buscar por folio...">
+            </div>
+            <div class="col-md-3">
+                <label for="filtroAsunto" class="form-label">Asunto</label>
+                <input type="text" class="form-control" id="filtroAsunto" placeholder="Buscar por asunto...">
+            </div>
+            <div class="col-md-3">
+                <label for="filtroFecha" class="form-label">Fecha</label>
+                <input type="date" class="form-control" id="filtroFecha">
+            </div>
+            <div class="col-md-3">
+                <label for="filtroCreador" class="form-label">Creado por</label>
+                <select class="form-select" id="filtroCreador">
+                    <option value="">Todos</option>
+                    @foreach (var usuario in nombresUsuarios)
+                    {
+                        <option value="@usuario.Value">@usuario.Value</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <button type="button" class="btn btn-outline-secondary" id="btnLimpiarFiltros">
+                    <i class="bi bi-x-circle"></i> Limpiar filtros
+                </button>
+                <span class="ms-3 text-muted" id="contadorResultados"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
 @if (Model != null && Model.Any())
 {
     <div class="table-responsive">
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover" id="tablaConsecutivos">
             <thead class="table-dark">
                 <tr>
                     <th>@Html.DisplayNameFor(model => model.FolioCompleto)</th>
@@ -31,12 +71,18 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tablaBody">
                 @foreach (var item in Model)
                 {
                     var estaCancelado = item.CanceladoPor > 0;
                     var puedeCancelar = !estaCancelado && (esAdmin || (usuarioIdActual.HasValue && item.UsuarioID == usuarioIdActual.Value));
-                    <tr class="@(estaCancelado ? "table-secondary" : "")">
+                    var nombreCancelador = estaCancelado && nombresUsuarios.ContainsKey(item.CanceladoPor) ? nombresUsuarios[item.CanceladoPor] : $"Usuario {item.CanceladoPor}";
+                    var nombreCreador = nombresUsuarios.ContainsKey(item.UsuarioID) ? nombresUsuarios[item.UsuarioID] : $"Usuario {item.UsuarioID}";
+                    <tr class="@(estaCancelado ? "table-secondary" : "") fila-consecutivo" 
+                        data-folio="@item.FolioCompleto?.ToLower()" 
+                        data-asunto="@item.Asunto?.ToLower()" 
+                        data-fecha="@item.Fecha.ToString("yyyy-MM-dd")"
+                        data-creador="@nombreCreador.ToLower()">
                         <td>
                             <strong>@Html.DisplayFor(modelItem => item.FolioCompleto)</strong>
                         </td>
@@ -44,7 +90,7 @@
                         <td>@Html.DisplayFor(modelItem => item.Destinatario)</td>
                         <td>@Html.DisplayFor(modelItem => item.Asunto)</td>
                         <td>@Html.DisplayFor(modelItem => item.Fecha)</td>
-                        <td>@(nombresUsuarios.ContainsKey(item.UsuarioID) ? nombresUsuarios[item.UsuarioID] : $"Usuario {item.UsuarioID}")</td>
+                        <td>@nombreCreador</td>
                         <td>
                             @if (estaCancelado)
                             {
@@ -57,6 +103,16 @@
                         </td>
                         <td>
                             <div class="btn-group" role="group">
+                                @if (estaCancelado)
+                                {
+                                    <button type="button" class="btn btn-sm btn-outline-info btn-ver-motivo" 
+                                            data-folio="@item.FolioCompleto"
+                                            data-motivo="@item.MotivoCan"
+                                            data-canceladopor="@nombreCancelador"
+                                            title="Ver motivo de cancelacion">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                }
                                 @if (puedeCancelar)
                                 {
                                     <button type="button" class="btn btn-sm btn-outline-warning btn-cancelar" 
@@ -82,6 +138,11 @@
             </tbody>
         </table>
     </div>
+    
+    <!-- Mensaje cuando no hay resultados de busqueda -->
+    <div class="alert alert-warning d-none" id="sinResultados" role="alert">
+        <i class="bi bi-exclamation-triangle"></i> No se encontraron consecutivos con los filtros aplicados.
+    </div>
 }
 else
 {
@@ -97,6 +158,29 @@ else
     </a>
 </div>
 
+<div class="modal fade" id="modalVerMotivo" tabindex="-1" aria-labelledby="modalVerMotivoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="modalVerMotivoLabel">
+                    <i class="bi bi-info-circle"></i> Motivo de Cancelacion
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Folio:</strong> <span id="folioVerMotivo"></span></p>
+                <p><strong>Cancelado por:</strong> <span id="canceladoPorVerMotivo"></span></p>
+                <hr />
+                <p><strong>Motivo:</strong></p>
+                <p id="motivoVerMotivo" class="border rounded p-3 bg-light"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="modalCancelar" tabindex="-1" aria-labelledby="modalCancelarLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -105,11 +189,11 @@ else
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>¿Está seguro de que desea cancelar el consecutivo <strong id="folioCancelar"></strong>?</p>
-                <p class="text-muted small">Esta acción marcará el consecutivo como cancelado, pero seguirá siendo visible en la consulta.</p>
+                <p>Esta seguro de que desea cancelar el consecutivo <strong id="folioCancelar"></strong>?</p>
+                <p class="text-muted small">Esta accion marcara el consecutivo como cancelado, pero seguira siendo visible en la consulta.</p>
                 <div class="mb-3">
-                    <label for="motivoCancelacion" class="form-label">Motivo de cancelación <span class="text-danger">*</span></label>
-                    <textarea class="form-control" id="motivoCancelacion" rows="4" maxlength="500" placeholder="Ingrese el motivo de la cancelación..." required></textarea>
+                    <label for="motivoCancelacion" class="form-label">Motivo de cancelacion <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="motivoCancelacion" rows="4" maxlength="500" placeholder="Ingrese el motivo de la cancelacion..." required></textarea>
                     <div class="form-text">
                         <span id="contadorCaracteres">0</span>/500 caracteres
                     </div>
@@ -118,7 +202,7 @@ else
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-warning" id="btnConfirmarCancelar">
-                    <i class="bi bi-x-circle"></i> Confirmar Cancelación
+                    <i class="bi bi-x-circle"></i> Confirmar Cancelacion
                 </button>
             </div>
         </div>

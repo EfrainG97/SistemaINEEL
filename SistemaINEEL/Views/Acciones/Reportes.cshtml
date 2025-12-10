@@ -1,0 +1,79 @@
+﻿@model IEnumerable<LibreriaModelos.Consecutivo>
+
+@{
+    ViewData["Title"] = "Reportes";
+}
+
+<h1>Reportes</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ConsecutivoID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FolioCompleto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remitente)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Destinatario)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Asunto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UsuarioID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CanceladoPor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MotivoCan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Activo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ConsecutivoID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FolioCompleto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remitente)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Destinatario)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Asunto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UsuarioID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CanceladoPor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MotivoCan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Activo)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using SistemaINEEL.ViewModels;
 using SistemaINEEL.Models;
 using ServiciosAPI.Interfaces;
-using LibreriaModelos;
 using System.Diagnostics;
 
 namespace SistemaINEEL.Controllers
@@ -59,7 +58,7 @@ namespace SistemaINEEL.Controllers
                 modelo.ErrorMessage = "Número de empleado o contraseña incorrectos";
                 return View("Index", modelo);
             }
-            catch (Exception ex)
+            catch
             {
                 modelo.ErrorMessage = "Error al conectar con el servidor. Por favor, intente más tarde.";
                 return View("Index", modelo);
