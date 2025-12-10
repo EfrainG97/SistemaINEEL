@@ -20,71 +20,10 @@
                 var rolNormalizado = (Model.NombreRol ?? "usuario").ToLowerInvariant().Trim();
             }
             <div class="dashboard-grid" id="dashboardGrid" data-role="@rolNormalizado"></div>
-            <script>
-                window.modulosPorRol = window.modulosPorRol || {
-                    admin: [
-                        { id: 'crear', icon: 'bi-plus-circle-fill', title: 'Crear', description: 'Registrar Consecutivo', url: '/Acciones/Crear', class: 'crear' },
-                        { id: 'consultar', icon: 'bi-search', title: 'Consultar', description: 'Visualizar listado de Consecutivos', url: '/Acciones/Consultar', class: 'consultar' },
-                        { id: 'reportes', icon: 'bi-file-earmark-bar-graph-fill', title: 'Reportes', description: 'Genera reportes', url: '/Acciones/Reportes', class: 'reportes' },
-                        { id: 'configuraciones', icon: 'bi-gear-fill', title: 'Configuraciones', description: 'Administra la configuracion del sistema', url: '/Sistema/Config', class: 'configuraciones' }
-                    ],
-                    usuario: [
-                        { id: 'crear', icon: 'bi-plus-circle-fill', title: 'Crear', description: 'Registrar Consecutivo', url: '/Acciones/Crear', class: 'crear' },
-                        { id: 'consultar', icon: 'bi-search', title: 'Consultar', description: 'Visualizar listado de Consecutivos', url: '/Acciones/Consultar', class: 'consultar' },
-                        { id: 'reportes', icon: 'bi-file-earmark-bar-graph-fill', title: 'Reportes', description: 'Genera reportes', url: '/Acciones/Reportes', class: 'reportes' }
-                    ]
-                };
-                
-                (function() {
-                    if (window.dashboardModulosCargados) {
-                        return;
-                    }
-                    
-                    function cargarModulos() {
-                        if (window.dashboardModulosCargados) {
-                            return;
-                        }
-                        
-                        const grid = document.getElementById('dashboardGrid');
-                        if (!grid || grid.children.length > 0) {
-                            if (grid) window.dashboardModulosCargados = true;
-                            return;
-                        }
-                        
-                        const userRole = (grid.getAttribute('data-role') || 'usuario').toLowerCase().trim();
-                        const modulos = window.modulosPorRol[userRole] || window.modulosPorRol.usuario;
-                        
-                        if (modulos && modulos.length > 0) {
-                            grid.innerHTML = '';
-                            modulos.forEach(function(modulo) {
-                                const card = document.createElement('div');
-                                card.className = 'module-card ' + modulo.class;
-                                card.innerHTML = 
-                                    '<div class="module-icon"><i class="bi ' + modulo.icon + '"></i></div>' +
-                                    '<h3 class="module-title">' + modulo.title + '</h3>' +
-                                    '<p class="module-description">' + modulo.description + '</p>' +
-                                    '<a href="' + modulo.url + '" class="module-btn">Acceder <i class="bi bi-arrow-right-short"></i></a>';
-                                card.addEventListener('click', function(e) {
-                                    if (!e.target.closest('.module-btn')) {
-                                        window.location.href = modulo.url;
-                                    }
-                                });
-                                grid.appendChild(card);
-                            });
-                            window.dashboardModulosCargados = true;
-                        }
-                    }
-                    
-                    if (document.readyState === 'loading') {
-                        document.addEventListener('DOMContentLoaded', cargarModulos);
-                    } else {
-                        cargarModulos();
-                    }
-                })();
-            </script>
         </div>
     </div>
 </div>
 
 @section Scripts {
+    <script src="~/js/home.js" asp-append-version="true"></script>
 }

@@ -1,4 +1,3 @@
-
 (function () {
     'use strict';
 
@@ -83,7 +82,7 @@
                 e.preventDefault();
                 e.stopImmediatePropagation();
                 
-                if (confirm('Estas seguro de que deseas cerrar sesion?')) {
+                if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
                     window.location.href = logoutLink.href;
                 }
             }
@@ -163,8 +162,8 @@
                             window.location.href = response.url;
                         }
                     })
-                    .catch(error => {
-                        console.error('Error verificando sesi?n:', error);
+                    .catch(function() {
+                        // Error de red silencioso
                     });
             }, 300000);
         }

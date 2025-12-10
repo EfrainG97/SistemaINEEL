@@ -66,70 +66,10 @@ namespace SistemaINEEL.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> CrearUsuario([FromBody] LibreriaModelos.Usuario nuevoUsuario)
-        {
-            if (nuevoUsuario == null || nuevoUsuario.NumEmpleado <= 0 || string.IsNullOrEmpty(nuevoUsuario.Password))
-            {
-                return BadRequest(new { success = false, message = "Datos de usuario inválidos" });
-            }
-            try
-            {
-                var usuarios = await _usuarioService.GetUsuariosAsync();
-                var usuarioExistente = usuarios.FirstOrDefault(u => u.NumEmpleado == nuevoUsuario.NumEmpleado);
-                if (usuarioExistente != null)
-                {
-                    return Conflict(new { success = false, message = "El número de empleado ya existe" });
-                }
-                await _usuarioService.PostUsuarioAsync(nuevoUsuario);
-                return Ok(new { success = true, message = "Usuario creado exitosamente" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Error al crear el usuario: " + ex.Message });
-            }
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> EliminarUsuario(int id)
-        {
-            try
-            {
-                var usuario = await _usuarioService.GetUsuarioByIdAsync(id);
-                if (usuario == null)
-                {
-                    return NotFound(new { success = false, message = "Usuario no encontrado" });
-                }
-                await _usuarioService.DeleteUsuarioAsync(id);
-                return Ok(new { success = true, message = "Usuario eliminado exitosamente" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { success = false, message = "Error al eliminar el usuario: " + ex.Message });
-            }
-        }
-
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Login");
-        }
-
-        public async Task<JsonResult> Buscar(int id)
-        {
-            try
-            {
-                var usuario = await _usuarioService.GetUsuarioByIdAsync(id);
-                if (usuario != null)
-                {
-                    return Json(new { success = true, data = usuario });
-                }
-                return Json(new { success = false, message = "Usuario no encontrado" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Error al buscar el usuario: " + ex.Message });
-            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

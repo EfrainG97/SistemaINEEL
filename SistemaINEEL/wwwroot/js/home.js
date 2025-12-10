@@ -5,7 +5,7 @@ const modulosPorRol = {
             icon: 'bi-plus-circle-fill',
             title: 'Crear',
             description: 'Registrar Consecutivo',
-            url: '/Acciones/Create',
+            url: '/Acciones/Crear',
             class: 'crear'
         },
         {
@@ -31,14 +31,6 @@ const modulosPorRol = {
             description: 'Administra la configuracion del sistema',
             url: '/Sistema/Config',
             class: 'configuraciones'
-        },
-        {
-            id: 'eliminar',
-            icon: 'bi-trash-fill',
-            title: 'Eliminar',
-            description: 'Elimina consecutivos',
-            url: '/Acciones/Eliminar',
-            class: 'eliminar'
         }
     ],
     usuario: [
@@ -47,7 +39,7 @@ const modulosPorRol = {
             icon: 'bi-plus-circle-fill',
             title: 'Crear',
             description: 'Registrar Consecutivo',
-            url: '/Acciones/Create',
+            url: '/Acciones/Crear',
             class: 'crear'
         },
         {
@@ -70,52 +62,50 @@ const modulosPorRol = {
 };
 
 function cargarModulos() {
-    try {
-        if (window.modulosCargados === true) {
-            return;
-        }
-        
-        const dashboardGrid = document.getElementById('dashboardGrid');
-        
-        if (!dashboardGrid) {
-            return;
-        }
-        
-        if (dashboardGrid.children.length > 0) {
-            window.modulosCargados = true;
-            return;
-        }
-
-        let userRole = dashboardGrid.getAttribute('data-role');
-        
-        if (userRole) {
-            userRole = String(userRole).toLowerCase().trim().replace(/\s+/g, '').replace(/[^a-z0-9_]/g, '');
-        } else {
-            userRole = 'usuario';
-        }
-
-        let modulos = modulosPorRol[userRole];
-        
-        if (!modulos) {
-            if (userRole && userRole.includes('admin')) {
-                modulos = modulosPorRol.admin;
-            } else {
-                modulos = modulosPorRol.usuario;
-            }
-        }
-
-        if (modulos && modulos.length > 0) {
-            dashboardGrid.innerHTML = '';
-            modulos.forEach((modulo) => {
-                const card = createModuleCard(modulo);
-                dashboardGrid.appendChild(card);
-            });
-        } else {
-            dashboardGrid.innerHTML = '<p>No hay módulos disponibles para tu rol.</p>';
-        }
-    } catch (error) {
-        console.error('Error en cargarModulos:', error);
+    if (window.modulosCargados === true) {
+        return;
     }
+    
+    const dashboardGrid = document.getElementById('dashboardGrid');
+    
+    if (!dashboardGrid) {
+        return;
+    }
+    
+    if (dashboardGrid.children.length > 0) {
+        window.modulosCargados = true;
+        return;
+    }
+
+    let userRole = dashboardGrid.getAttribute('data-role');
+    
+    if (userRole) {
+        userRole = String(userRole).toLowerCase().trim().replace(/\s+/g, '').replace(/[^a-z0-9_]/g, '');
+    } else {
+        userRole = 'usuario';
+    }
+
+    let modulos = modulosPorRol[userRole];
+    
+    if (!modulos) {
+        if (userRole && userRole.includes('admin')) {
+            modulos = modulosPorRol.admin;
+        } else {
+            modulos = modulosPorRol.usuario;
+        }
+    }
+
+    if (modulos && modulos.length > 0) {
+        dashboardGrid.innerHTML = '';
+        modulos.forEach((modulo) => {
+            const card = createModuleCard(modulo);
+            dashboardGrid.appendChild(card);
+        });
+    } else {
+        dashboardGrid.innerHTML = '<p>No hay módulos disponibles para tu rol.</p>';
+    }
+    
+    window.modulosCargados = true;
 }
 
 (function() {
@@ -161,15 +151,3 @@ function createModuleCard(modulo) {
 
     return card;
 }
-
-setInterval(function () {
-    fetch('/Home/Index')
-        .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
-            }
-        })
-        .catch(error => {
-            console.error('Error verificando sesión:', error);
-        });
-}, 300000);

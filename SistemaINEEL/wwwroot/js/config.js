@@ -1,5 +1,41 @@
 $(document).ready(function () {
     cargarUsuarios();
+
+    $('#formCrearUsuario').submit(function (e) {
+        e.preventDefault();
+        var num = $('#numEmpleado').val();
+        var user = $('#nombreUsuario').val();
+        var pass = $('#password').val();
+        var rol = $('#rol').val();
+        crearUsuario(num, user, pass, rol);
+    });
+
+    $('#formEditarUsuario').submit(function (e) {
+        e.preventDefault();
+        var usuarioId = $('#editUsuarioId').val();
+        var num = $('#editNumEmpleado').val();
+        var user = $('#editNombreUsuario').val();
+        var pass = $('#editPassword').val();
+        var rol = $('#editRol').val();
+        editarUsuario(usuarioId, num, user, pass, rol);
+    });
+
+    $('#formEditarGerencia').submit(function (e) {
+        e.preventDefault();
+        var sistemaId = $('#sistemaId').val();
+        var nuevaGerencia = $('#nuevaGerencia').val();
+        editarGerencia(sistemaId, nuevaGerencia);
+    });
+
+    $('.close').click(function () {
+        cerrarModal();
+    });
+
+    $(window).click(function (event) {
+        if (event.target.id === 'modalEditarUsuario') {
+            cerrarModal();
+        }
+    });
 });
 
 function cargarUsuarios() {
@@ -63,6 +99,7 @@ function crearUsuario(num, user, pass, rol) {
         }
     });
 }
+
 function eliminarUsuario(usuarioId) {
     if (confirm('¿Está seguro de que desea eliminar este usuario?')) {
         $.ajax({
@@ -132,46 +169,7 @@ function abrirModalEditar(usuarioId, numEmpleado, nombreUsuario, password, idRol
     $('#modalEditarUsuario').css('display', 'block');
 }
 
-
 function cerrarModal() {
     $('#modalEditarUsuario').css('display', 'none');
     $('#formEditarUsuario')[0].reset();
 }
-
-
-    $('#formCrearUsuario').submit(function (e) {
-        e.preventDefault();
-        var num = $('#numEmpleado').val();
-        var user = $('#nombreUsuario').val();
-        var pass = $('#password').val();
-        var rol = $('#rol').val();
-        crearUsuario(num, user, pass, rol);
-    });
-
-    $('#formEditarUsuario').submit(function (e) {
-        e.preventDefault();
-        var usuarioId = $('#editUsuarioId').val();
-        var num = $('#editNumEmpleado').val();
-        var user = $('#editNombreUsuario').val();
-        var pass = $('#editPassword').val();
-        var rol = $('#editRol').val();
-        editarUsuario(usuarioId, num, user, pass, rol);
-    });
-
-    $('#formEditarGerencia').submit(function (e) {
-        e.preventDefault();
-        var sistemaId = $('#sistemaId').val();
-        var nuevaGerencia = $('#nuevaGerencia').val();
-        editarGerencia(sistemaId, nuevaGerencia);
-    });
-
-    $('.close').click(function () {
-        cerrarModal();
-    });
-
-    $(window).click(function (event) {
-        if (event.target.id === 'modalEditarUsuario') {
-            cerrarModal();
-        }
-    });
-;
