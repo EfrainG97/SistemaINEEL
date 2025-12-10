@@ -2,78 +2,396 @@
 
 @{
     ViewData["Title"] = "Reportes";
+    var nombresUsuarios = ViewData["NombresUsuarios"] as Dictionary<int, string> ?? new Dictionary<int, string>();
+    var totalConsecutivos = ViewData["TotalConsecutivos"] as int? ?? 0;
+    var consecutivosActivos = ViewData["ConsecutivosActivos"] as int? ?? 0;
+    var consecutivosCancelados = ViewData["ConsecutivosCancelados"] as int? ?? 0;
+    var consecutivosHoy = ViewData["ConsecutivosHoy"] as int? ?? 0;
+    var consecutivosMes = ViewData["ConsecutivosMes"] as int? ?? 0;
+    var esAdmin = ViewData["EsAdmin"] as bool? ?? false;
+    var usuarioIdActual = ViewData["UsuarioIDActual"] as int?;
 }
 
-<h1>Reportes</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/reportes.css" asp-append-version="true" />
+}
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ConsecutivoID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FolioCompleto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Remitente)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Destinatario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Asunto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UsuarioID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CanceladoPor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MotivoCan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Activo)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ConsecutivoID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FolioCompleto)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Remitente)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Destinatario)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Asunto)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UsuarioID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CanceladoPor)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MotivoCan)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Activo)
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<!-- Header -->
+<div class="reportes-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1><i class="bi bi-file-earmark-bar-graph-fill me-2"></i>Reportes</h1>
+            <p>Panel de estadisticas y generacion de reportes de consecutivos</p>
+        </div>
+        <div>
+            <span class="badge bg-light text-dark fs-6">
+                <i class="bi bi-calendar3 me-1"></i> @DateTime.Now.ToString("dd/MM/yyyy")
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Resumen de estadisticas -->
+<div class="row g-4 mb-4">
+    <div class="col-lg col-md-6">
+        <div class="card resumen-card resumen-total">
+            <div class="card-body text-center">
+                <div class="icono-resumen mx-auto">
+                    <i class="bi bi-file-text"></i>
+                </div>
+                <div class="numero">@totalConsecutivos</div>
+                <div class="etiqueta">Total Consecutivos</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg col-md-6">
+        <div class="card resumen-card resumen-activos">
+            <div class="card-body text-center">
+                <div class="icono-resumen mx-auto">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <div class="numero">@consecutivosActivos</div>
+                <div class="etiqueta">Activos</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg col-md-6">
+        <div class="card resumen-card resumen-cancelados">
+            <div class="card-body text-center">
+                <div class="icono-resumen mx-auto">
+                    <i class="bi bi-x-circle"></i>
+                </div>
+                <div class="numero">@consecutivosCancelados</div>
+                <div class="etiqueta">Cancelados</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg col-md-6">
+        <div class="card resumen-card resumen-hoy">
+            <div class="card-body text-center">
+                <div class="icono-resumen mx-auto">
+                    <i class="bi bi-calendar-day"></i>
+                </div>
+                <div class="numero">@consecutivosHoy</div>
+                <div class="etiqueta">Hoy</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg col-md-6">
+        <div class="card resumen-card resumen-mes">
+            <div class="card-body text-center">
+                <div class="icono-resumen mx-auto">
+                    <i class="bi bi-calendar-month"></i>
+                </div>
+                <div class="numero">@consecutivosMes</div>
+                <div class="etiqueta">Este Mes</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Panel de filtros -->
+<div class="filtros-panel">
+    <div class="filtros-titulo">
+        <i class="bi bi-funnel"></i> Filtrar Consecutivos
+    </div>
+    <div class="row g-3">
+        <div class="col-md-2">
+            <label for="filtroFolio" class="form-label">Folio</label>
+            <input type="text" class="form-control" id="filtroFolio" placeholder="Buscar folio...">
+        </div>
+        <div class="col-md-2">
+            <label for="filtroAsunto" class="form-label">Asunto</label>
+            <input type="text" class="form-control" id="filtroAsunto" placeholder="Buscar asunto...">
+        </div>
+        <div class="col-md-2">
+            <label for="fechaDesde" class="form-label">Fecha Desde</label>
+            <input type="date" class="form-control" id="fechaDesde">
+        </div>
+        <div class="col-md-2">
+            <label for="fechaHasta" class="form-label">Fecha Hasta</label>
+            <input type="date" class="form-control" id="fechaHasta">
+        </div>
+        <div class="col-md-2">
+            <label for="filtroUsuario" class="form-label">Creado por</label>
+            <select class="form-select" id="filtroUsuario">
+                <option value="">Todos</option>
+                @foreach (var usuario in nombresUsuarios)
+                {
+                    <option value="@usuario.Value.ToLower()">@usuario.Value</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label for="filtroEstado" class="form-label">Estado</label>
+            <select class="form-select" id="filtroEstado">
+                <option value="">Todos</option>
+                <option value="activo">Activos</option>
+                <option value="cancelado">Cancelados</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <span class="text-muted" id="contadorResultados"></span>
+            </div>
+            <div>
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="btnLimpiarFiltros">
+                    <i class="bi bi-x-circle me-1"></i> Limpiar filtros
+                </button>
+                <button type="button" class="btn btn-outline-success btn-sm ms-2" id="btnExportar">
+                    <i class="bi bi-file-excel me-1"></i> Exportar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mensaje sin resultados -->
+<div class="alert alert-warning d-none" id="sinResultadosReporte">
+    <div class="sin-datos">
+        <i class="bi bi-search"></i>
+        <p>No se encontraron consecutivos con los filtros seleccionados.</p>
+    </div>
+</div>
+
+<!-- Tabla de reportes -->
+@if (Model != null && Model.Any())
+{
+    <div class="tabla-reportes" id="tablaReportes">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Folio</th>
+                    <th>Fecha</th>
+                    <th>Remitente</th>
+                    <th>Destinatario</th>
+                    <th>Asunto</th>
+                    <th>Registrado por</th>
+                    <th>Estado</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var estaCancelado = item.CanceladoPor > 0;
+                    var nombreCreador = nombresUsuarios.ContainsKey(item.UsuarioID) ? nombresUsuarios[item.UsuarioID] : $"Usuario {item.UsuarioID}";
+                    var nombreCancelador = estaCancelado && nombresUsuarios.ContainsKey(item.CanceladoPor) ? nombresUsuarios[item.CanceladoPor] : $"Usuario {item.CanceladoPor}";
+                    var estadoTexto = estaCancelado ? "cancelado" : "activo";
+                    var puedeCancelar = !estaCancelado && (esAdmin || (usuarioIdActual.HasValue && item.UsuarioID == usuarioIdActual.Value));
+                    <tr class="fila-reporte"
+                        data-folio="@item.FolioCompleto?.ToLower()"
+                        data-asunto="@item.Asunto?.ToLower()"
+                        data-fecha="@item.Fecha.ToString("yyyy-MM-dd")"
+                        data-creador="@nombreCreador.ToLower()"
+                        data-estado="@estadoTexto">
+                        <td><strong>@item.FolioCompleto</strong></td>
+                        <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Remitente</td>
+                        <td>@item.Destinatario</td>
+                        <td>@item.Asunto</td>
+                        <td>
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-person me-1"></i>@nombreCreador
+                            </span>
+                        </td>
+                        <td>
+                            @if (estaCancelado)
+                            {
+                                <span class="estado-badge estado-cancelado">
+                                    <i class="bi bi-x-circle me-1"></i>Cancelado
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="estado-badge estado-activo">
+                                    <i class="bi bi-check-circle me-1"></i>Activo
+                                </span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group-acciones">
+                                @if (estaCancelado)
+                                {
+                                    <button type="button" class="btn-accion btn-ver-motivo" 
+                                            data-folio="@item.FolioCompleto"
+                                            data-motivo="@item.MotivoCan"
+                                            data-canceladopor="@nombreCancelador"
+                                            data-bs-toggle="tooltip"
+                                            title="Ver motivo de cancelacion">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </button>
+                                }
+                                @if (puedeCancelar)
+                                {
+                                    <button type="button" class="btn-accion btn-cancelar-consecutivo" 
+                                            data-id="@item.ConsecutivoID" 
+                                            data-folio="@item.FolioCompleto"
+                                            data-bs-toggle="tooltip"
+                                            title="Cancelar consecutivo">
+                                        <i class="bi bi-x-octagon-fill"></i>
+                                    </button>
+                                }
+                                @if (esAdmin)
+                                {
+                                    <button type="button" class="btn-accion btn-eliminar-consecutivo" 
+                                            data-id="@item.ConsecutivoID" 
+                                            data-folio="@item.FolioCompleto"
+                                            data-bs-toggle="tooltip"
+                                            title="Eliminar consecutivo">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                }
+                                @if (!estaCancelado && !puedeCancelar && !esAdmin)
+                                {
+                                    <span class="text-muted">-</span>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <div class="sin-datos">
+                <i class="bi bi-inbox"></i>
+                <h5>No hay consecutivos registrados</h5>
+                <p>Aun no se han creado consecutivos en el sistema.</p>
+                <a href="/Acciones/Crear" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-1"></i> Crear Consecutivo
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="mt-4">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Volver al Dashboard
+    </a>
+</div>
+
+<!-- Modal Ver Motivo de Cancelacion -->
+<div class="modal fade" id="modalVerMotivo" tabindex="-1" aria-labelledby="modalVerMotivoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-motivo">
+            <div class="modal-header modal-header-info">
+                <div class="modal-icon-header">
+                    <i class="bi bi-info-circle-fill"></i>
+                </div>
+                <h5 class="modal-title" id="modalVerMotivoLabel">Detalle de Cancelacion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="detalle-item">
+                    <label>Folio</label>
+                    <p id="folioVerMotivo" class="valor-folio"></p>
+                </div>
+                <div class="detalle-item">
+                    <label>Cancelado por</label>
+                    <p id="canceladoPorVerMotivo"></p>
+                </div>
+                <div class="detalle-item">
+                    <label>Motivo de cancelacion</label>
+                    <div id="motivoVerMotivo" class="motivo-texto"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg me-1"></i>Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Cancelar Consecutivo -->
+<div class="modal fade" id="modalCancelar" tabindex="-1" aria-labelledby="modalCancelarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-cancelar">
+            <div class="modal-header modal-header-warning">
+                <div class="modal-icon-header">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <h5 class="modal-title" id="modalCancelarLabel">Cancelar Consecutivo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alerta-cancelar">
+                    <p>Esta a punto de cancelar el consecutivo:</p>
+                    <p class="folio-cancelar" id="folioCancelar"></p>
+                </div>
+                <div class="mb-3">
+                    <label for="motivoCancelacion" class="form-label fw-bold">
+                        Motivo de cancelacion <span class="text-danger">*</span>
+                    </label>
+                    <textarea class="form-control" id="motivoCancelacion" rows="4" maxlength="500" 
+                              placeholder="Describa el motivo por el cual se cancela este consecutivo..." required></textarea>
+                    <div class="form-text d-flex justify-content-between">
+                        <span>Este campo es obligatorio</span>
+                        <span><span id="contadorCaracteres">0</span>/500</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg me-1"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-warning" id="btnConfirmarCancelar">
+                    <i class="bi bi-x-octagon me-1"></i>Confirmar Cancelacion
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Consecutivo -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-eliminar">
+            <div class="modal-header modal-header-danger">
+                <div class="modal-icon-header">
+                    <i class="bi bi-trash-fill"></i>
+                </div>
+                <h5 class="modal-title" id="modalEliminarLabel">Eliminar Consecutivo</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="alerta-eliminar">
+                    <i class="bi bi-exclamation-circle-fill icono-alerta"></i>
+                    <p class="mb-2">Esta seguro de que desea eliminar el consecutivo:</p>
+                    <p class="folio-eliminar" id="folioEliminar"></p>
+                    <p class="text-muted small mt-3">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Esta accion no se puede deshacer
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg me-1"></i>No, mantener
+                </button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">
+                    <i class="bi bi-trash me-1"></i>Si, eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        window.accionesUrls = {
+            cancelar: '@Url.Action("Cancelar", "Acciones")',
+            eliminar: '@Url.Action("Eliminar", "Acciones")'
+        };
+    </script>
+    <script src="~/js/reportes.js" asp-append-version="true"></script>
+}

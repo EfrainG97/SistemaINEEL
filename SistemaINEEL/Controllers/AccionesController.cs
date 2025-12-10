@@ -10,34 +10,21 @@ namespace SistemaINEEL.Controllers
     public class AccionesController : Controller
     {
         private readonly IConsecutivoService _consecutivoService;
-        private readonly IReporteService _reporteService;
         private readonly ISistemaService _sistemaService;
         private readonly IUsuarioService _usuarioService;
 
-        public AccionesController(IConsecutivoService consecutivoService, IReporteService reporteService, ISistemaService sistemaService, IUsuarioService usuarioService)
+        public AccionesController(IConsecutivoService consecutivoService, ISistemaService sistemaService, IUsuarioService usuarioService)
         {
             _consecutivoService = consecutivoService;
-            _reporteService = reporteService;
             _sistemaService = sistemaService;
             _usuarioService = usuarioService;
         }
 
-        public async Task<IActionResult> Consultar()
+        public async Task<IActionResult> Reportes()
         {
             try
             {
                 var consecutivos = await _consecutivoService.GetConsecutivosAsync();
-                
-                var nombreRol = HttpContext.Session.GetString("NombreRol")?.Trim().ToLowerInvariant() ?? "usuario";
-                ViewData["EsAdmin"] = nombreRol == "admin";
-                
-                var usuarioIdStr = HttpContext.Session.GetString("UsuarioID");
-                int? usuarioIdActual = null;
-                if (!string.IsNullOrWhiteSpace(usuarioIdStr) && int.TryParse(usuarioIdStr, out int userId))
-                {
-                    usuarioIdActual = userId;
-                }
-                ViewData["UsuarioIDActual"] = usuarioIdActual;
                 
                 var nombresUsuarios = new Dictionary<int, string>();
                 try
@@ -54,34 +41,43 @@ namespace SistemaINEEL.Controllers
                 
                 ViewData["NombresUsuarios"] = nombresUsuarios;
                 
+                // Obtener rol y usuario actual
+                var nombreRol = HttpContext.Session.GetString("NombreRol")?.Trim().ToLowerInvariant() ?? "usuario";
+                ViewData["EsAdmin"] = nombreRol == "admin";
+                
+                var usuarioIdStr = HttpContext.Session.GetString("UsuarioID");
+                int? usuarioIdActual = null;
+                if (!string.IsNullOrWhiteSpace(usuarioIdStr) && int.TryParse(usuarioIdStr, out int userId))
+                {
+                    usuarioIdActual = userId;
+                }
+                ViewData["UsuarioIDActual"] = usuarioIdActual;
+                
+                var totalConsecutivos = consecutivos.Count();
+                var consecutivosActivos = consecutivos.Count(c => c.CanceladoPor == 0);
+                var consecutivosCancelados = consecutivos.Count(c => c.CanceladoPor > 0);
+                var consecutivosHoy = consecutivos.Count(c => c.Fecha == DateOnly.FromDateTime(DateTime.Now));
+                var consecutivosMes = consecutivos.Count(c => c.Fecha.Month == DateTime.Now.Month && c.Fecha.Year == DateTime.Now.Year);
+                
+                ViewData["TotalConsecutivos"] = totalConsecutivos;
+                ViewData["ConsecutivosActivos"] = consecutivosActivos;
+                ViewData["ConsecutivosCancelados"] = consecutivosCancelados;
+                ViewData["ConsecutivosHoy"] = consecutivosHoy;
+                ViewData["ConsecutivosMes"] = consecutivosMes;
+                
                 return View(consecutivos);
             }
             catch
             {
+                ViewData["NombresUsuarios"] = new Dictionary<int, string>();
                 ViewData["EsAdmin"] = false;
                 ViewData["UsuarioIDActual"] = null;
-                ViewData["NombresUsuarios"] = new Dictionary<int, string>();
+                ViewData["TotalConsecutivos"] = 0;
+                ViewData["ConsecutivosActivos"] = 0;
+                ViewData["ConsecutivosCancelados"] = 0;
+                ViewData["ConsecutivosHoy"] = 0;
+                ViewData["ConsecutivosMes"] = 0;
                 return View(new List<Consecutivo>());
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Eliminar(int id)
-        {
-            try
-            {
-                var nombreRol = HttpContext.Session.GetString("NombreRol")?.Trim().ToLowerInvariant() ?? "usuario";
-                if (nombreRol != "admin")
-                {
-                    return Json(new { success = false, message = "No tiene permisos para eliminar consecutivos" });
-                }
-
-                await _consecutivoService.DeleteConsecutivoAsync(id);
-                return Json(new { success = true, message = "Consecutivo eliminado exitosamente" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Error al eliminar el consecutivo: " + ex.Message });
             }
         }
 
@@ -135,6 +131,26 @@ namespace SistemaINEEL.Controllers
             catch (Exception ex)
             {
                 return Json(new { success = false, message = "Error al cancelar el consecutivo: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Eliminar(int id)
+        {
+            try
+            {
+                var nombreRol = HttpContext.Session.GetString("NombreRol")?.Trim().ToLowerInvariant() ?? "usuario";
+                if (nombreRol != "admin")
+                {
+                    return Json(new { success = false, message = "No tiene permisos para eliminar consecutivos" });
+                }
+
+                await _consecutivoService.DeleteConsecutivoAsync(id);
+                return Json(new { success = true, message = "Consecutivo eliminado exitosamente" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error al eliminar el consecutivo: " + ex.Message });
             }
         }
 

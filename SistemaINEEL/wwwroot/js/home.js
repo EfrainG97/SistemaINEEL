@@ -9,18 +9,10 @@ const modulosPorRol = {
             class: 'crear'
         },
         {
-            id: 'consultar',
-            icon: 'bi-search',
-            title: 'Consultar',
-            description: 'Visualizar listado de Consecutivos',
-            url: '/Acciones/Consultar',
-            class: 'consultar'
-        },
-        {
             id: 'reportes',
             icon: 'bi-file-earmark-bar-graph-fill',
             title: 'Reportes',
-            description: 'Genera reportes',
+            description: 'Genera reportes y consulta consecutivos',
             url: '/Acciones/Reportes',
             class: 'reportes'
         },
@@ -43,18 +35,10 @@ const modulosPorRol = {
             class: 'crear'
         },
         {
-            id: 'consultar',
-            icon: 'bi-search',
-            title: 'Consultar',
-            description: 'Visualizar listado de Consecutivos',
-            url: '/Acciones/Consultar',
-            class: 'consultar'
-        },
-        {
             id: 'reportes',
             icon: 'bi-file-earmark-bar-graph-fill',
             title: 'Reportes',
-            description: 'Genera reportes',
+            description: 'Genera reportes y consulta consecutivos',
             url: '/Acciones/Reportes',
             class: 'reportes'
         }
