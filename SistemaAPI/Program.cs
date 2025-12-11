@@ -4,11 +4,10 @@ using SistemaAPI.Data;
 using SistemaAPI.Commands;
 
 #region Verificar Comandos CLI
-// Verificar si se está ejecutando un comando CLI antes de iniciar la aplicación web
 if (args.Length > 0 && args.Contains("cleardb"))
 {
     await ClearDatabaseCommand.ExecuteAsync(args);
-    return; // Salir después de ejecutar el comando
+    return;
 }
 #endregion
 
